@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -21,7 +22,8 @@ export async function login(_prevState: AuthState, formData: FormData): Promise<
     refresh_token: data.session.refresh_token,
   })
 
-  const { data: profile } = await supabase
+  const adminClient = createAdminClient()
+  const { data: profile } = await adminClient
     .from("profiles")
     .select("role")
     .eq("id", data.user.id)
@@ -46,7 +48,8 @@ export async function adminLogin(_prevState: AuthState, formData: FormData): Pro
     refresh_token: data.session.refresh_token,
   })
 
-  const { data: profile } = await supabase
+  const adminClient = createAdminClient()
+  const { data: profile } = await adminClient
     .from("profiles")
     .select("role")
     .eq("id", data.user.id)
