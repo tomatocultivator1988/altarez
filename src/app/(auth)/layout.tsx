@@ -15,8 +15,8 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
 
   if (!user) redirect("/login")
 
-  const adminClient = createAdminClient()
-  const { data: profile } = await adminClient
+  const admin = createAdminClient()
+  const { data: profile } = await admin
     .from("profiles")
     .select("role, first_name, last_name, username, avatar_url")
     .eq("id", user.id)

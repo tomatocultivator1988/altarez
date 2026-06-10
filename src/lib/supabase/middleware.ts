@@ -25,10 +25,6 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
   const { pathname } = request.nextUrl
 
   const isPublicRoute =
@@ -37,33 +33,29 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith('/login') ||
     pathname.startsWith('/register') ||
     pathname === '/machinery' ||
-    pathname.startsWith('/machinery/') && !pathname.includes('/manage') ||
+    (pathname.startsWith('/machinery/') && !pathname.includes('/manage')) ||
     pathname.startsWith('/auth/callback')
 
   const isAdminRoute = pathname.startsWith('/admin')
 
-  if (!user && !isPublicRoute) {
+  const { data: { session } } = await supabase.auth.getSession()
+
+  if (!session && !isPublicRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-  if (user) {
+  if (session?.user && isAdminRoute) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', user.id)
+      .eq('id', session.user.id)
       .single()
 
-    if (isAdminRoute && profile?.role !== 'admin') {
+    if (profile?.role !== 'admin') {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
-      return NextResponse.redirect(url)
-    }
-
-    if (pathname === '/login' || pathname === '/register') {
-      const url = request.nextUrl.clone()
-      url.pathname = profile?.role === 'admin' ? '/admin/dashboard' : '/dashboard'
       return NextResponse.redirect(url)
     }
   }
