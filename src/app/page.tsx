@@ -22,9 +22,9 @@ export default function LandingPage() {
         style={{ backgroundImage: "url('/background.png')" }}
       />
 
-      {/* Cinematic gradient overlay — dark left, clear right where tractor is */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+      {/* Cinematic gradient overlay — dark left for text, clear right for tractor */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
 
       {/* Transparent Navigation */}
       <header className="relative z-20 flex h-20 items-center justify-between px-6 lg:px-12">
