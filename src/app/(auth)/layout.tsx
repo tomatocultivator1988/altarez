@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
@@ -14,7 +15,8 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
 
   if (!user) redirect("/login")
 
-  const { data: profile } = await supabase
+  const adminClient = createAdminClient()
+  const { data: profile } = await adminClient
     .from("profiles")
     .select("role, first_name, last_name, username, avatar_url")
     .eq("id", user.id)
@@ -22,13 +24,11 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
 
   if (!profile) redirect("/login")
 
-  const role = profile.role as string
-
-  if (role === "admin") redirect("/admin/dashboard")
+  if (profile.role === "admin") redirect("/admin/dashboard")
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar role={role as UserRole} />
+      <Sidebar role={profile.role as UserRole} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
           user={{
