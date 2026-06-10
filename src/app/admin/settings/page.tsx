@@ -1,13 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
 export default function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Settings</h1>
-      <Card>
-        <CardHeader><CardTitle>System Settings</CardTitle></CardHeader>
-        <CardContent><p className="text-sm text-muted-foreground">Settings panel coming soon.</p></CardContent>
-      </Card>
+      <div className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 py-16 backdrop-blur-sm text-white/40">
+        Settings panel coming soon
+      </div>
     </div>
   )
 }

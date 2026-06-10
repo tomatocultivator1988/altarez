@@ -44,18 +44,18 @@ export function Sidebar({ role }: SidebarProps) {
   const links = role === "lender" ? lenderLinks : farmerLinks
 
   return (
-    <aside className="hidden w-64 shrink-0 border-r bg-card lg:block">
-      <div className="flex h-14 items-center gap-2 border-b px-4">
+    <aside className="relative z-10 hidden w-64 shrink-0 border-r border-white/10 bg-black/50 backdrop-blur-lg lg:block">
+      <div className="flex h-14 items-center gap-2 border-b border-white/10 px-4">
         <Tractor className="size-6 text-primary" />
-        <span className="text-lg font-semibold">Agrimalachina</span>
+        <span className="text-lg font-semibold text-white">Agrimalachina</span>
       </div>
       <nav className="flex flex-col gap-1 p-3">
         {links.map((link) => {
           const isActive = pathname === link.href
           const linkClass = cn(
-            buttonVariants({ variant: isActive ? "secondary" : "ghost" }),
-            "justify-start gap-3 h-8 px-2.5",
-            isActive && "bg-secondary font-medium"
+            buttonVariants({ variant: "ghost" }),
+            "justify-start gap-3 h-8 px-2.5 text-white/70 hover:text-white hover:bg-white/10",
+            isActive && "bg-white/10 text-white font-medium"
           )
           return (
             <Link key={link.href} href={link.href} className={linkClass}>
@@ -64,10 +64,10 @@ export function Sidebar({ role }: SidebarProps) {
             </Link>
           )
         })}
-        <Separator className="my-2" />
+        <Separator className="my-2 bg-white/10" />
         <Link
           href="/machinery"
-          className={cn(buttonVariants({ variant: "ghost" }), "justify-start gap-3 h-8 px-2.5")}
+          className={cn(buttonVariants({ variant: "ghost" }), "justify-start gap-3 h-8 px-2.5 text-white/70 hover:text-white hover:bg-white/10")}
         >
           <Tractor className="size-4" />
           Browse All Machinery

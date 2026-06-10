@@ -2,12 +2,10 @@
 
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { cn, formatCurrency } from "@/lib/utils"
 import { MACHINERY_STATUSES, MACHINERY_TYPES } from "@/lib/constants"
-import { formatCurrency } from "@/lib/utils"
 import Link from "next/link"
 import { Tractor, Pencil, Trash2 } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -35,7 +33,7 @@ export default function ManageMachineryPage() {
     router.refresh()
   }
 
-  if (loading) return <div className="py-16 text-center text-muted-foreground">Loading...</div>
+  if (loading) return <div className="py-16 text-center text-white/40">Loading...</div>
 
   return (
     <div className="space-y-6">
@@ -48,42 +46,40 @@ export default function ManageMachineryPage() {
 
       {!machinery.length ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <Tractor className="size-12 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-medium">No machinery yet</h3>
-          <p className="text-sm text-muted-foreground">Add your first agricultural machinery.</p>
+          <Tractor className="size-12 text-white/20" />
+          <h3 className="mt-4 text-lg font-medium text-white/60">No machinery yet</h3>
+          <p className="text-sm text-white/40">Add your first agricultural machinery.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {machinery.map((m) => {
             const status = MACHINERY_STATUSES[m.status as keyof typeof MACHINERY_STATUSES]
             return (
-              <Card key={m.id as string}>
-                <CardContent className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-muted">
-                      <Tractor className="size-6 text-muted-foreground" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{m.machine_name as string}</h3>
-                        <Badge className={status?.color}>{status?.label}</Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {MACHINERY_TYPES.find((t) => t.value === m.machine_type)?.label}
-                        {m.rate_per_hour != null && ` \u2022 ${formatCurrency(m.rate_per_hour as number)}/hr`}
-                      </p>
-                    </div>
+              <div key={m.id as string} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+                <div className="flex items-center gap-4">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-white/5">
+                    <Tractor className="size-6 text-white/40" />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Link href={`/machinery/manage/${m.id}/edit`} className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}>
-                      <Pencil className="size-4" />
-                    </Link>
-                    <button onClick={() => handleDelete(m.id as string)} className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "text-destructive")}>
-                      <Trash2 className="size-4" />
-                    </button>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold">{m.machine_name as string}</h3>
+                      <Badge className={status?.color}>{status?.label}</Badge>
+                    </div>
+                    <p className="text-sm text-white/50">
+                      {MACHINERY_TYPES.find((t) => t.value === m.machine_type)?.label}
+                      {m.rate_per_hour != null && ` \u2022 ${formatCurrency(m.rate_per_hour as number)}/hr`}
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link href={`/machinery/manage/${m.id}/edit`} className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "text-white/60 hover:text-white hover:bg-white/10")}>
+                    <Pencil className="size-4" />
+                  </Link>
+                  <button onClick={() => handleDelete(m.id as string)} className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "text-red-400 hover:text-red-300 hover:bg-red-400/10")}>
+                    <Trash2 className="size-4" />
+                  </button>
+                </div>
+              </div>
             )
           })}
         </div>

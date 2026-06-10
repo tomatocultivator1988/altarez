@@ -1,19 +1,40 @@
 "use client"
 
-import { useState, useActionState } from "react"
+import { useState, useActionState, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { login, register } from "@/actions/auth"
 import Link from "next/link"
-import { ArrowRight, Tractor, X, Leaf, Shield, Heart, Users } from "lucide-react"
+import { ArrowRight, Tractor, X, Leaf, Shield, Users } from "lucide-react"
 
 type ModalType = "login" | "register" | "about" | null
 
-const loginInitial = { error: "" }
-const registerInitial = { error: "" }
+const loginInitial = { error: "", success: "" }
+const registerInitial = { error: "", success: "" }
 
 export default function LandingClient() {
+  const router = useRouter()
   const [activeModal, setActiveModal] = useState<ModalType>(null)
-  const [loginState, loginAction, loginPending] = useActionState(login, loginInitial)
-  const [regState, regAction, regPending] = useActionState(register, registerInitial)
+
+  const handleLogin = useCallback(async (_prev: typeof loginInitial, formData: FormData) => {
+    const result = await login(_prev, formData)
+    if (result.success) {
+      router.push(result.success)
+      return result
+    }
+    return result
+  }, [router])
+
+  const handleRegister = useCallback(async (_prev: typeof registerInitial, formData: FormData) => {
+    const result = await register(_prev, formData)
+    if (result.success) {
+      router.push(result.success)
+      return result
+    }
+    return result
+  }, [router])
+
+  const [loginState, loginAction, loginPending] = useActionState(handleLogin as never, loginInitial)
+  const [regState, regAction, regPending] = useActionState(handleRegister as never, registerInitial)
 
   const isModalOpen = activeModal !== null
 

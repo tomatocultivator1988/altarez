@@ -3,9 +3,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
 
-type AuthState = { error: string }
+type AuthState = { error: string; success?: string }
 
 export async function login(_prevState: AuthState, formData: FormData): Promise<AuthState> {
   const supabase = await createClient()
@@ -33,38 +32,8 @@ export async function login(_prevState: AuthState, formData: FormData): Promise<
     return { error: `Profile lookup failed: ${profileError?.message ?? "not found"}` }
   }
 
-  const destination = profile.role === "admin" ? "/admin/dashboard" : "/dashboard"
-  redirect(destination)
-}
-
-export async function adminLogin(_prevState: AuthState, formData: FormData): Promise<AuthState> {
-  const supabase = await createClient()
-  const email = formData.get("email") as string
-  const password = formData.get("password") as string
-
-  const { error, data } = await supabase.auth.signInWithPassword({ email, password })
-  if (error || !data.user || !data.session) {
-    return { error: error?.message ?? "Login failed" }
-  }
-
-  await supabase.auth.setSession({
-    access_token: data.session.access_token,
-    refresh_token: data.session.refresh_token,
-  })
-
-  const adminClient = createAdminClient()
-  const { data: profile } = await adminClient
-    .from("profiles")
-    .select("role")
-    .eq("id", data.user.id)
-    .single()
-
-  if (profile?.role !== "admin") {
-    await supabase.auth.signOut()
-    return { error: "Access denied. Admin only." }
-  }
-
-  redirect("/admin/dashboard")
+  revalidatePath("/", "layout")
+  return { success: profile.role === "admin" ? "/admin/dashboard" : "/dashboard", error: "" }
 }
 
 export async function register(_prevState: AuthState, formData: FormData): Promise<AuthState> {
@@ -123,5 +92,36 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   }
 
   revalidatePath("/", "layout")
-  redirect("/dashboard")
+  return { success: "/dashboard", error: "" }
+}
+
+export async function adminLogin(_prevState: AuthState, formData: FormData): Promise<AuthState> {
+  const supabase = await createClient()
+  const email = formData.get("email") as string
+  const password = formData.get("password") as string
+
+  const { error, data } = await supabase.auth.signInWithPassword({ email, password })
+  if (error || !data.user || !data.session) {
+    return { error: error?.message ?? "Login failed" }
+  }
+
+  await supabase.auth.setSession({
+    access_token: data.session.access_token,
+    refresh_token: data.session.refresh_token,
+  })
+
+  const admin = createAdminClient()
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .single()
+
+  if (profile?.role !== "admin") {
+    await supabase.auth.signOut()
+    return { error: "Access denied. Admin only." }
+  }
+
+  revalidatePath("/", "layout")
+  return { success: "/admin/dashboard", error: "" }
 }

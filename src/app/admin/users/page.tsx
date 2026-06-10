@@ -1,8 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { cn, formatDate } from "@/lib/utils"
-import { USER_ROLES } from "@/lib/constants"
+import { formatDate } from "@/lib/utils"
 
 export default async function AdminUsersPage() {
   const supabase = createAdminClient()
@@ -11,29 +9,29 @@ export default async function AdminUsersPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">User Management</h1>
-      <div className="rounded-lg border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Username</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Barangay</TableHead>
-              <TableHead>Joined</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+      <div className="overflow-x-auto rounded-xl border border-white/10">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-white/10 text-left text-white/50">
+              <th className="p-3 font-medium">Name</th>
+              <th className="p-3 font-medium">Username</th>
+              <th className="p-3 font-medium">Role</th>
+              <th className="p-3 font-medium">Barangay</th>
+              <th className="p-3 font-medium">Joined</th>
+            </tr>
+          </thead>
+          <tbody>
             {users?.map((u) => (
-              <TableRow key={u.id}>
-                <TableCell className="font-medium">{u.first_name} {u.last_name}</TableCell>
-                <TableCell>@{u.username}</TableCell>
-                <TableCell><Badge>{u.role}</Badge></TableCell>
-                <TableCell>{u.barangay ?? "-"}</TableCell>
-                <TableCell className="text-muted-foreground">{formatDate(u.created_at)}</TableCell>
-              </TableRow>
+              <tr key={u.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                <td className="p-3 font-medium">{u.first_name} {u.last_name}</td>
+                <td className="p-3 text-white/50">@{u.username}</td>
+                <td className="p-3"><Badge>{u.role}</Badge></td>
+                <td className="p-3 text-white/40">{u.barangay ?? "-"}</td>
+                <td className="p-3 text-white/40">{formatDate(u.created_at)}</td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
     </div>
   )

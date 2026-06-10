@@ -38,7 +38,7 @@ export function Header({ user }: HeaderProps) {
   const iconBtnClass = cn(buttonVariants({ variant: "ghost", size: "icon" }))
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-4 border-b bg-card px-4 lg:px-6">
+    <header className="relative z-10 flex h-14 shrink-0 items-center gap-4 border-b border-white/10 bg-black/40 backdrop-blur-lg px-4 lg:px-6">
       <button className={cn(iconBtnClass, "lg:hidden")}>
         <Menu className="size-5" />
       </button>
