@@ -45,18 +45,23 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      <main className="flex flex-1 flex-col items-center justify-center px-4 text-center">
-        <h1 className="max-w-2xl text-4xl font-bold tracking-tight lg:text-5xl">
-          WELCOME TO AGRIMALACHINA!
-        </h1>
-        <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-          Welcome to the Machinery Page! Explore a wide range of advanced agricultural machinery
-          tailored to make farming easier and more productive. From harvesters to transplanters,
-          our equipment is designed to support every stage of the farming process.
-        </p>
-        <div className="mt-8 flex gap-4">
-          <Link href="/register" className={ctaClass}>Get Started</Link>
-          <Link href="/machinery" className={outlineCtaClass}>Browse Machinery</Link>
+      <main
+        className="flex flex-1 flex-col items-center justify-center px-4 text-center bg-cover bg-center"
+        style={{ backgroundImage: "url('/background.png')" }}
+      >
+        <div className="relative z-10 -mt-16 max-w-2xl rounded-xl bg-background/80 px-8 py-12 shadow-lg backdrop-blur-sm">
+          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">
+            WELCOME TO AGRIMALACHINA!
+          </h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Welcome to the Machinery Page! Explore a wide range of advanced agricultural machinery
+            tailored to make farming easier and more productive. From harvesters to transplanters,
+            our equipment is designed to support every stage of the farming process.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Link href="/register" className={ctaClass}>Get Started</Link>
+            <Link href="/machinery" className={outlineCtaClass}>Browse Machinery</Link>
+          </div>
         </div>
       </main>
 
