@@ -33,15 +33,15 @@ const outlineCtaClass = cn(
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex h-14 items-center justify-between border-b bg-background px-4 lg:px-8">
+      <header className="flex h-14 items-center justify-between border-b border-primary/20 bg-primary px-4 text-primary-foreground lg:px-8">
         <div className="flex items-center gap-2">
-          <Tractor className="size-6 text-primary" />
+          <Tractor className="size-6" />
           <span className="text-lg font-semibold">Agrimalachina</span>
         </div>
         <nav className="flex items-center gap-2">
-          <Link href="/" className={navLinkClass}>Home</Link>
-          <Link href="/about" className={navLinkClass}>About</Link>
-          <Link href="/login" className={navLinkClass}>Login</Link>
+          <Link href="/" className={cn(navLinkClass, "text-primary-foreground hover:bg-primary-foreground/10")}>Home</Link>
+          <Link href="/about" className={cn(navLinkClass, "text-primary-foreground hover:bg-primary-foreground/10")}>About</Link>
+          <Link href="/login" className={cn(buttonVariants({ variant: "secondary" }), "h-8")}>Login</Link>
         </nav>
       </header>
 
@@ -65,7 +65,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <footer className="border-t py-6 text-center text-sm text-muted-foreground">
+      <footer className="border-t border-primary/20 bg-primary py-6 text-center text-sm text-primary-foreground/80">
         &copy; {new Date().getFullYear()} Agrimalachina. Mina, Iloilo.
       </footer>
     </div>
