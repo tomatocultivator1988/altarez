@@ -110,7 +110,7 @@ export default function LandingClient() {
 
         {/* Modal Overlay — fades in on the left dark portion */}
         <div
-          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-start overflow-y-auto px-6 py-20 lg:px-12"
+          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-start px-6 lg:px-12"
           style={{ opacity: isModalOpen ? 1 : 0 }}
         >
           <div
