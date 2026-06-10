@@ -22,14 +22,18 @@ export async function login(_prevState: AuthState, formData: FormData): Promise<
     refresh_token: data.session.refresh_token,
   })
 
-  const adminClient = createAdminClient()
-  const { data: profile } = await adminClient
+  const admin = createAdminClient()
+  const { data: profile, error: profileError } = await admin
     .from("profiles")
     .select("role")
     .eq("id", data.user.id)
     .single()
 
-  const destination = profile?.role === "admin" ? "/admin/dashboard" : "/dashboard"
+  if (profileError || !profile) {
+    return { error: `Profile lookup failed: ${profileError?.message ?? "not found"}` }
+  }
+
+  const destination = profile.role === "admin" ? "/admin/dashboard" : "/dashboard"
   redirect(destination)
 }
 
