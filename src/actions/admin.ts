@@ -41,3 +41,19 @@ export async function adminDeleteUser(userId: string) {
 
   revalidatePath("/admin/users")
 }
+
+export async function adminDeleteMachinery(machineryId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Unauthorized" }
+
+  const admin = createAdminClient()
+  const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single()
+  if (profile?.role !== "admin") return { error: "Admin only" }
+
+  const { error } = await admin.from("machinery").delete().eq("id", machineryId)
+  if (error) return { error: error.message }
+
+  revalidatePath("/admin/machinery")
+  revalidatePath("/machinery")
+}

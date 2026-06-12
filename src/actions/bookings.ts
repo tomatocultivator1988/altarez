@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -75,7 +76,8 @@ export async function updateBookingStatus(bookingId: string, status: string) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "Unauthorized" }
 
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  const admin = createAdminClient()
+  const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single()
   const isAdmin = profile?.role === "admin"
 
   const { data: booking } = await supabase
