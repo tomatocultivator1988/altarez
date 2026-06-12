@@ -1,6 +1,7 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { uploadFile } from "@/lib/blob/client"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -16,7 +17,16 @@ export async function createMachinery(formData: FormData) {
   const hectares_capacity = formData.get("hectares_capacity") ? Number(formData.get("hectares_capacity")) : null
   const rate_per_hour = formData.get("rate_per_hour") ? Number(formData.get("rate_per_hour")) : null
   const barangay = formData.get("barangay") as string || null
-  const image_url = formData.get("image_url") as string || null
+
+  const imageFile = formData.get("image")
+  let image_url = null
+  if (imageFile instanceof File && imageFile.size > 0) {
+    try {
+      image_url = await uploadFile(imageFile, { userId: user.id, folder: "machinery" })
+    } catch {
+      return { error: "Failed to upload image. Check that BLOB_READ_WRITE_TOKEN is set." }
+    }
+  }
 
   const { error } = await supabase.from("machinery").insert({
     owner_id: user.id,
@@ -50,8 +60,17 @@ export async function updateMachinery(id: string, formData: FormData) {
   const hectares_capacity = formData.get("hectares_capacity") ? Number(formData.get("hectares_capacity")) : null
   const rate_per_hour = formData.get("rate_per_hour") ? Number(formData.get("rate_per_hour")) : null
   const barangay = formData.get("barangay") as string || null
-  const image_url = formData.get("image_url") as string || null
   const status = formData.get("status") as string
+
+  const imageFile = formData.get("image")
+  let image_url = formData.get("existing_image_url") as string | null
+  if (imageFile instanceof File && imageFile.size > 0) {
+    try {
+      image_url = await uploadFile(imageFile, { userId: user.id, folder: "machinery" })
+    } catch {
+      return { error: "Failed to upload image. Check that BLOB_READ_WRITE_TOKEN is set." }
+    }
+  }
 
   const { error } = await supabase
     .from("machinery")

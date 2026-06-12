@@ -1,12 +1,13 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useRef, useState } from "react"
 import { createMachinery, updateMachinery } from "@/actions/machinery"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { MACHINERY_TYPES, MACHINERY_STATUSES } from "@/lib/constants"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, ImageIcon, Upload, X } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 const initialState = { error: "" }
 
@@ -28,6 +29,20 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
     : createMachinery as unknown as (_s: typeof initialState, fd: FormData) => Promise<typeof initialState>
 
   const [state, formAction, pending] = useActionState(action, initialState)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [preview, setPreview] = useState<string | null>(machinery?.image_url ?? null)
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) {
+      setPreview(URL.createObjectURL(file))
+    }
+  }
+
+  function clearImage() {
+    setPreview(null)
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
 
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
@@ -54,7 +69,30 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
           <div><label className={labelClass}>Serial Number</label><input name="serial_number" defaultValue={machinery?.serial_number ?? ""} className={inputClass} /></div>
           <div><label className={labelClass}>Barangay</label><input name="barangay" defaultValue={machinery?.barangay ?? ""} className={inputClass} /></div>
         </div>
-        <div><label className={labelClass}>Image URL</label><input name="image_url" type="url" placeholder="https://..." defaultValue={machinery?.image_url ?? ""} className={inputClass} /></div>
+
+        <div>
+          <label className={labelClass}>Image</label>
+          <input type="hidden" name="existing_image_url" value={machinery?.image_url ?? ""} />
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-white/15 bg-white/5 px-4 py-6 text-white/50 transition hover:border-primary/40 hover:bg-white/10"
+          >
+            {preview ? (
+              <div className="relative w-full max-w-xs">
+                <Image src={preview} alt="Preview" width={400} height={300} className="rounded-lg object-cover" />
+                <button type="button" onClick={(e) => { e.stopPropagation(); clearImage() }} className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white"><X className="size-4" /></button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-2">
+                <ImageIcon className="size-10" />
+                <span className="text-sm">Click to upload image</span>
+                <span className="text-xs text-white/30">PNG, JPG, WebP (max 5MB)</span>
+              </div>
+            )}
+          </div>
+          <input ref={fileInputRef} name="image" type="file" accept="image/png,image/jpeg,image/webp" onChange={handleFileChange} className="hidden" />
+        </div>
+
         {isEdit && (
           <div>
             <label className={labelClass}>Status</label>
