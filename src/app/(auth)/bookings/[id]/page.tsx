@@ -1,6 +1,7 @@
 "use client"
 
 import { use, useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { updateBookingStatus } from "@/actions/bookings"
 import { Badge } from "@/components/ui/badge"
@@ -14,7 +15,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   const [booking, setBooking] = useState<Record<string, unknown> | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const { id } = use(params)
+  const router = useRouter()
 
   useEffect(() => {
     async function load() {
@@ -64,16 +67,27 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
             <p><span className="text-white/50">Owner:</span> {owner?.first_name} {owner?.last_name}</p>
           </div>
           {booking.notes ? <p className="text-sm text-white/50">Notes: {String(booking.notes)}</p> : null}
-          <BookingActions bookingId={id} status={s} isOwner={isOwner} isRenter={isRenter} />
+          <BookingActions bookingId={id} status={s} isOwner={isOwner} isRenter={isRenter} router={router} />
+          {error && <p className="text-sm text-red-400">{error}</p>}
         </div>
       </div>
     </div>
   )
 }
 
-function BookingActions({ bookingId, status, isOwner, isRenter }: { bookingId: string; status: string; isOwner: boolean; isRenter: boolean }) {
+function BookingActions({ bookingId, status, isOwner, isRenter, router }: {
+  bookingId: string; status: string; isOwner: boolean; isRenter: boolean; router: ReturnType<typeof useRouter>
+}) {
   const [working, setWorking] = useState(false)
-  async function handle(s: string) { setWorking(true); await updateBookingStatus(bookingId, s); window.location.reload() }
+  const [err, setErr] = useState("")
+
+  async function handle(s: string) {
+    setWorking(true); setErr("")
+    const res = await updateBookingStatus(bookingId, s) as { error?: string } | undefined
+    if (res?.error) { setErr(res.error); setWorking(false); return }
+    router.refresh()
+  }
+
   if (working) return <p className="text-sm text-white/40 pt-2">Updating...</p>
   return (
     <>
@@ -83,8 +97,12 @@ function BookingActions({ bookingId, status, isOwner, isRenter }: { bookingId: s
           <button onClick={() => handle("denied")} className={cn(buttonVariants({ variant: "destructive" }))}>Deny</button>
         </div>
       )}
-      {isOwner && status === "approved" && <button onClick={() => handle("active")} className={cn(buttonVariants())}>Mark as Active</button>}
-      {(isOwner || isRenter) && status === "active" && <button onClick={() => handle("completed")} className={cn(buttonVariants())}>Mark Completed</button>}
+      {isOwner && status === "approved" && <button onClick={() => handle("active")} className={cn(buttonVariants({ className: "mt-2" }))}>Mark as Active</button>}
+      {(isOwner || isRenter) && status === "active" && <button onClick={() => handle("completed")} className={cn(buttonVariants({ className: "mt-2" }))}>Mark Completed</button>}
+      {isRenter && (status === "pending" || status === "approved") && (
+        <button onClick={() => handle("cancelled")} className={cn(buttonVariants({ variant: "outline", className: "mt-2 border-red-400/30 text-red-300 hover:bg-red-400/10" }))}>Cancel Booking</button>
+      )}
+      {err && <p className="text-sm text-red-400 pt-2">{err}</p>}
     </>
   )
 }

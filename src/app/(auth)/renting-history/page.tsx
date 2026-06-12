@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"
 import { BOOKING_STATUSES } from "@/lib/constants"
-import { formatDate } from "@/lib/utils"
+import { formatCurrency, formatDate } from "@/lib/utils"
 import Link from "next/link"
 import { Clock } from "lucide-react"
 
@@ -41,7 +41,7 @@ export default async function RentingHistoryPage() {
                 </div>
                 <div className="text-right">
                   <Badge className={status?.color}>{status?.label}</Badge>
-                  {b.total_amount != null && <p className="mt-1 text-sm font-semibold">{b.total_amount as number}</p>}
+                  {b.total_amount != null && <p className="mt-1 text-sm font-semibold">{formatCurrency(b.total_amount as number)}</p>}
                 </div>
               </div>
             )

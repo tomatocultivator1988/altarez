@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { deleteMachinery } from "@/actions/machinery"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn, formatCurrency } from "@/lib/utils"
@@ -28,7 +29,9 @@ export default function ManageMachineryPage() {
   }, [])
 
   async function handleDelete(id: string) {
-    await supabase.from("machinery").delete().eq("id", id)
+    if (!window.confirm("Delete this machinery? This cannot be undone.")) return
+    const res = await deleteMachinery(id)
+    if (res?.error) { alert(res.error); return }
     setMachinery((prev) => prev.filter((m) => m.id !== id))
     router.refresh()
   }

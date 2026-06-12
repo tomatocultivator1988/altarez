@@ -4,6 +4,15 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
+const VALID_TRANSITIONS: Record<string, string[]> = {
+  pending: ["approved", "denied", "cancelled"],
+  approved: ["active", "cancelled"],
+  active: ["completed"],
+  completed: [],
+  denied: [],
+  cancelled: [],
+}
+
 export async function createBooking(machinery_id: string, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -25,7 +34,7 @@ export async function createBooking(machinery_id: string, formData: FormData) {
 
   const { data: machinery } = await supabase
     .from("machinery")
-    .select("owner_id, rate_per_hour")
+    .select("owner_id, rate_per_hour, machine_name")
     .eq("id", machinery_id)
     .single()
 
@@ -48,6 +57,14 @@ export async function createBooking(machinery_id: string, formData: FormData) {
 
   if (error) return { error: error.message }
 
+  await supabase.from("notifications").insert({
+    user_id: machinery.owner_id,
+    title: "New Booking Request",
+    message: `${user.email} requested your ${machinery.machine_name} (${starting_date} → ${ending_date}).`,
+    type: "info",
+    link: "/bookings",
+  })
+
   revalidatePath("/bookings")
   revalidatePath("/dashboard")
   redirect("/bookings")
@@ -55,18 +72,65 @@ export async function createBooking(machinery_id: string, formData: FormData) {
 
 export async function updateBookingStatus(bookingId: string, status: string) {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Unauthorized" }
 
-  const updates: Record<string, unknown> = { status }
-  if (status === "active") {
-    const { data: booking } = await supabase.from("bookings").select("machinery_id").eq("id", bookingId).single()
-    if (booking) {
-      await supabase.from("machinery").update({ status: "in_use" }).eq("id", booking.machinery_id)
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  const isAdmin = profile?.role === "admin"
+
+  const { data: booking } = await supabase
+    .from("bookings")
+    .select("*, machinery!inner(machine_name)")
+    .eq("id", bookingId)
+    .single()
+
+  if (!booking) return { error: "Booking not found" }
+
+  const allowed = VALID_TRANSITIONS[booking.status] || []
+  if (!allowed.includes(status)) {
+    return { error: `Cannot change from "${booking.status}" to "${status}"` }
+  }
+
+  const isOwner = booking.owner_id === user.id
+  const isRenter = booking.renter_id === user.id
+
+  if (!isAdmin) {
+    if ((status === "approved" || status === "denied" || status === "active") && !isOwner) {
+      return { error: "Only the machinery owner can perform this action" }
+    }
+    if (status === "cancelled" && !isRenter) {
+      return { error: "Only the renter can cancel a booking" }
     }
   }
 
-  const { error } = await supabase.from("bookings").update(updates).eq("id", bookingId)
+  if (status === "active") {
+    await supabase.from("machinery").update({ status: "in_use" }).eq("id", booking.machinery_id)
+  } else if (["completed", "denied", "cancelled"].includes(status)) {
+    await supabase.from("machinery").update({ status: "active" }).eq("id", booking.machinery_id)
+  }
+
+  const { error } = await supabase.from("bookings").update({ status }).eq("id", bookingId)
   if (error) return { error: error.message }
+
+  const statusLabels: Record<string, string> = {
+    approved: "approved", denied: "denied", active: "marked as active",
+    completed: "completed", cancelled: "cancelled",
+  }
+  const label = statusLabels[status] || status
+  const machineName = (booking.machinery as { machine_name: string }).machine_name
+  const prefix = isAdmin ? "Admin " : ""
+
+  await supabase.from("notifications").insert([
+    { user_id: booking.owner_id, title: `Booking ${label}`, message: `${prefix}Booking for ${machineName} has been ${label}.`, type: status === "denied" ? "error" : "info", link: "/bookings" },
+    { user_id: booking.renter_id, title: `Booking ${label}`, message: `${prefix}Your booking for ${machineName} has been ${label}.`, type: status === "denied" ? "error" : status === "completed" ? "success" : "info", link: "/bookings" },
+  ])
 
   revalidatePath("/bookings")
   revalidatePath("/dashboard")
+  revalidatePath("/machinery")
+  revalidatePath("/admin/bookings")
+}
+
+export async function cancelBooking(bookingId: string) {
+  return updateBookingStatus(bookingId, "cancelled")
 }
