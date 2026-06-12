@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { Badge } from "@/components/ui/badge"
 import { BOOKING_STATUSES } from "@/lib/constants"
 import { formatCurrency, formatDate } from "@/lib/utils"
@@ -13,7 +14,8 @@ export default async function BookingsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return <p className="text-white/50">Please log in.</p>
 
-  const { data: bookings } = await supabase
+  const admin = createAdminClient()
+  const { data: bookings } = await admin
     .from("bookings")
     .select("*, machinery(machine_name, machine_type), renter:profiles!bookings_renter_id_fkey(first_name, last_name), owner:profiles!bookings_owner_id_fkey(first_name, last_name)")
     .or(`renter_id.eq.${user.id},owner_id.eq.${user.id}`)

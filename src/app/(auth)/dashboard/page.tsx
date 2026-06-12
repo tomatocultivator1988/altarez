@@ -53,7 +53,7 @@ export default async function DashboardPage() {
     const { count } = await admin
       .from("machinery")
       .select("*", { count: "exact", head: true })
-      .eq("status", "active")
+      .eq(profile.role === "lender" ? "owner_id" : "status", profile.role === "lender" ? user.id : "active")
     machineryCount = count ?? 0
   } catch {}
 
