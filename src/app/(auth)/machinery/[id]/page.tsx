@@ -39,7 +39,10 @@ export default async function MachineryDetailPage({ params }: { params: Promise<
           {m.image_url ? (
             <img src={m.image_url} alt={m.machine_name} className="h-full w-full object-cover" />
           ) : (
-            <Tractor className="size-16 text-white/20" />
+            <div className="flex flex-col items-center gap-2 text-white/20">
+              <Tractor className="size-12" />
+              <span className="text-xs">No image available</span>
+            </div>
           )}
         </div>
         <div className="p-6 space-y-4">

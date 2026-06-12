@@ -79,7 +79,10 @@ export default async function MachineryPage({
                     {m.image_url ? (
                       <img src={m.image_url} alt={m.machine_name} className="h-full w-full object-cover" />
                     ) : (
-                      <Tractor className="size-12 text-white/20" />
+                      <div className="flex flex-col items-center gap-1 text-white/20">
+                        <Tractor className="size-8" />
+                        <span className="text-[10px]">No image</span>
+                      </div>
                     )}
                   </div>
                   <div className="p-4">
