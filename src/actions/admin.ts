@@ -42,6 +42,42 @@ export async function adminDeleteUser(userId: string) {
   revalidatePath("/admin/users")
 }
 
+export async function adminGetUserDetail(userId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Unauthorized" }
+
+  const admin = createAdminClient()
+  const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single()
+  if (profile?.role !== "admin") return { error: "Admin only" }
+
+  const { data: authUser } = await admin.auth.admin.getUserById(userId)
+  const email = authUser?.user?.email ?? "N/A"
+
+  const { data: lenderProfile } = await admin
+    .from("lender_profiles")
+    .select("*")
+    .eq("id", userId)
+    .maybeSingle()
+
+  const { count: machineryCount } = await admin
+    .from("machinery")
+    .select("*", { count: "exact", head: true })
+    .eq("owner_id", userId)
+
+  const { count: bookingCount } = await admin
+    .from("bookings")
+    .select("*", { count: "exact", head: true })
+    .or(`renter_id.eq.${userId},owner_id.eq.${userId}`)
+
+  return {
+    email,
+    lenderProfile,
+    machineryCount: machineryCount ?? 0,
+    bookingCount: bookingCount ?? 0,
+  }
+}
+
 export async function adminDeleteMachinery(machineryId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

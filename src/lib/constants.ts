@@ -17,12 +17,12 @@ export const MACHINERY_STATUSES = {
 } as const
 
 export const BOOKING_STATUSES = {
-  pending: { label: 'Pending', color: 'bg-orange-100 text-orange-800' },
-  approved: { label: 'Approved', color: 'bg-blue-100 text-blue-800' },
-  active: { label: 'Active', color: 'bg-green-100 text-green-800' },
+  pending: { label: 'Waiting for Approval', color: 'bg-orange-100 text-orange-800' },
+  approved: { label: 'Approved — Ready to Start', color: 'bg-blue-100 text-blue-800' },
+  active: { label: 'Ongoing Rental', color: 'bg-green-100 text-green-800' },
   completed: { label: 'Completed', color: 'bg-gray-100 text-gray-800' },
   denied: { label: 'Denied', color: 'bg-red-100 text-red-800' },
-  cancelled: { label: 'Cancelled', color: 'bg-gray-100 text-gray-800' },
+  cancelled: { label: 'Cancelled', color: 'bg-red-100 text-red-800' },
 } as const
 
 export const PAYMENT_STATUSES = {

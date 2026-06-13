@@ -18,10 +18,6 @@ function addDays(date: Date, days: number): string {
   return d.toISOString().split("T")[0]
 }
 
-function img(seed: string): string {
-  return `https://picsum.photos/seed/${seed}/600/400`
-}
-
 const BARANGAYS = ["Brgy. Agcuyawan", "Brgy. Alimodian", "Brgy. Badiangan", "Brgy. Banban", "Brgy. Carabalan", "Brgy. Dala", "Brgy. Igtambo", "Brgy. Lantangan"]
 
 const NOW = new Date()
@@ -116,14 +112,14 @@ async function main() {
   // ── 5. Insert machinery ────────────────────────────────────────
   console.log("\n─ Inserting machinery...")
   const machinery = [
-    { owner_id: juanId, machine_name: "John Deere 6120M", machine_type: "4wd_tractor", description: "120 HP 4WD tractor with rotavator and trailer. Ideal for large-scale land preparation.", serial_number: "JD-6120M-2024-001", hectares_capacity: 5, rate_per_hour: 1500, barangay: "Brgy. Alimodian", image_url: img("johndeere6120m"), status: "active" },
-    { owner_id: juanId, machine_name: "Kubota M7060", machine_type: "hand_tractor", description: "70 HP hand tractor with disc plow and harrow. Perfect for small to medium farms.", serial_number: "KT-M7060-2024-002", hectares_capacity: 2, rate_per_hour: 500, barangay: "Brgy. Alimodian", image_url: img("kubotam7060"), status: "active" },
-    { owner_id: juanId, machine_name: "Yanmar Combine Harvester", machine_type: "harvester", description: "4-row combine harvester with GPS guidance. Cuts and threshes in one pass.", serial_number: "YR-4R-2024-003", hectares_capacity: 8, rate_per_hour: 2500, barangay: "Brgy. Igtambo", image_url: img("yanmarcombine"), status: "active" },
-    { owner_id: juanId, machine_name: "GrainPro Dryer 10T", machine_type: "dryer", description: "10-ton capacity recirculating grain dryer. Maintains grain quality with even drying.", serial_number: "GP-10T-2024-004", hectares_capacity: 10, rate_per_hour: 800, barangay: "Brgy. Igtambo", image_url: img("grainpro10t"), status: "active" },
-    { owner_id: mariaId, machine_name: "Power Tiller FT-300", machine_type: "floating_tiller", description: "Floating power tiller for wetland rice paddies. Excellent flotation in muddy fields.", serial_number: "PT-FT300-2024-005", hectares_capacity: 1.5, rate_per_hour: 400, barangay: "Brgy. Carabalan", image_url: img("powertiller300"), status: "active" },
-    { owner_id: mariaId, machine_name: "Isuzu Farm Truck 4x4", machine_type: "hauling", description: "4x4 farm truck with hydraulic lift bed. Hauls palay, fertilizers, and equipment.", serial_number: "IS-4x4-2024-006", hectares_capacity: 0, rate_per_hour: 1200, barangay: "Brgy. Carabalan", image_url: img("isuzufarmtruck"), status: "active" },
-    { owner_id: mariaId, machine_name: "Satake Rice Miller S-10", machine_type: "miller", description: "Satake single-pass rice mill. Produces premium milled rice with minimal breakage.", serial_number: "ST-S10-2024-007", hectares_capacity: 3, rate_per_hour: 600, barangay: "Brgy. Lantangan", image_url: img("satakemiller"), status: "active" },
-    { owner_id: mariaId, machine_name: "Multi-Purpose Craft Shop", machine_type: "craft_establishment", description: "Fully equipped crafts and repair shop for agricultural implements and machinery.", serial_number: "MPC-001-2024-008", hectares_capacity: 0, rate_per_hour: 0, barangay: "Brgy. Lantangan", image_url: img("craftshop"), status: "maintenance" },
+    { owner_id: juanId, machine_name: "John Deere 6120M", machine_type: "4wd_tractor", description: "120 HP 4WD tractor with rotavator and trailer. Ideal for large-scale land preparation.", serial_number: "JD-6120M-2024-001", hectares_capacity: 5, rate_per_hour: 1500, barangay: "Brgy. Alimodian", image_url: null, status: "active" },
+    { owner_id: juanId, machine_name: "Kubota M7060", machine_type: "hand_tractor", description: "70 HP hand tractor with disc plow and harrow. Perfect for small to medium farms.", serial_number: "KT-M7060-2024-002", hectares_capacity: 2, rate_per_hour: 500, barangay: "Brgy. Alimodian", image_url: null, status: "active" },
+    { owner_id: juanId, machine_name: "Yanmar Combine Harvester", machine_type: "harvester", description: "4-row combine harvester with GPS guidance. Cuts and threshes in one pass.", serial_number: "YR-4R-2024-003", hectares_capacity: 8, rate_per_hour: 2500, barangay: "Brgy. Igtambo", image_url: null, status: "active" },
+    { owner_id: juanId, machine_name: "GrainPro Dryer 10T", machine_type: "dryer", description: "10-ton capacity recirculating grain dryer. Maintains grain quality with even drying.", serial_number: "GP-10T-2024-004", hectares_capacity: 10, rate_per_hour: 800, barangay: "Brgy. Igtambo", image_url: null, status: "active" },
+    { owner_id: mariaId, machine_name: "Power Tiller FT-300", machine_type: "floating_tiller", description: "Floating power tiller for wetland rice paddies. Excellent flotation in muddy fields.", serial_number: "PT-FT300-2024-005", hectares_capacity: 1.5, rate_per_hour: 400, barangay: "Brgy. Carabalan", image_url: null, status: "active" },
+    { owner_id: mariaId, machine_name: "Isuzu Farm Truck 4x4", machine_type: "hauling", description: "4x4 farm truck with hydraulic lift bed. Hauls palay, fertilizers, and equipment.", serial_number: "IS-4x4-2024-006", hectares_capacity: 0, rate_per_hour: 1200, barangay: "Brgy. Carabalan", image_url: null, status: "active" },
+    { owner_id: mariaId, machine_name: "Satake Rice Miller S-10", machine_type: "miller", description: "Satake single-pass rice mill. Produces premium milled rice with minimal breakage.", serial_number: "ST-S10-2024-007", hectares_capacity: 3, rate_per_hour: 600, barangay: "Brgy. Lantangan", image_url: null, status: "active" },
+    { owner_id: mariaId, machine_name: "Multi-Purpose Craft Shop", machine_type: "craft_establishment", description: "Fully equipped crafts and repair shop for agricultural implements and machinery.", serial_number: "MPC-001-2024-008", hectares_capacity: 0, rate_per_hour: 0, barangay: "Brgy. Lantangan", image_url: null, status: "maintenance" },
   ]
   const { data: machineryInserted, error: machErr } = await supabase.from("machinery").insert(machinery).select()
   if (machErr) { console.error("  ✗ Machinery insert failed:", machErr.message); process.exit(1) }
