@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { bookingSchema } from "@/lib/validators/booking"
 
 const VALID_TRANSITIONS: Record<string, string[]> = {
   pending: ["approved", "denied", "cancelled"],
@@ -21,9 +22,22 @@ export async function createBooking(machinery_id: string, formData: FormData) {
 
   const starting_date = formData.get("starting_date") as string
   const ending_date = formData.get("ending_date") as string
-  const requested_hectares = formData.get("requested_hectares") ? Number(formData.get("requested_hectares")) : null
-  const estimated_hours = formData.get("estimated_hours") ? Number(formData.get("estimated_hours")) : null
-  const notes = formData.get("notes") as string || null
+  const requested_hectares = formData.get("requested_hectares") ? Number(formData.get("requested_hectares")) : undefined
+  const estimated_hours = formData.get("estimated_hours") ? Number(formData.get("estimated_hours")) : undefined
+  const notes = formData.get("notes") as string || undefined
+
+  const parsed = bookingSchema.safeParse({
+    machinery_id,
+    starting_date,
+    ending_date,
+    requested_hectares: requested_hectares ?? undefined,
+    estimated_hours: estimated_hours ?? undefined,
+    notes,
+  })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  if (estimated_hours != null && estimated_hours < 0) return { error: "Estimated hours must be positive" }
+  if (requested_hectares != null && requested_hectares < 0) return { error: "Requested hectares must be positive" }
 
   const { data: available } = await supabase.rpc("check_machinery_availability", {
     p_machinery_id: machinery_id,
@@ -40,6 +54,8 @@ export async function createBooking(machinery_id: string, formData: FormData) {
     .single()
 
   if (!machinery) return { error: "Machinery not found" }
+
+  if (machinery.owner_id === user.id) return { error: "You cannot book your own machinery" }
 
   const total_amount = (machinery.rate_per_hour ?? 0) * (estimated_hours ?? 0)
 
@@ -108,7 +124,15 @@ export async function updateBookingStatus(bookingId: string, status: string) {
   if (status === "active") {
     await supabase.from("machinery").update({ status: "in_use" }).eq("id", booking.machinery_id)
   } else if (["completed", "denied", "cancelled"].includes(status)) {
-    await supabase.from("machinery").update({ status: "active" }).eq("id", booking.machinery_id)
+    const { count } = await supabase
+      .from("bookings")
+      .select("id", { count: "exact", head: true })
+      .eq("machinery_id", booking.machinery_id)
+      .eq("status", "active")
+      .neq("id", bookingId)
+    if ((count ?? 0) === 0) {
+      await supabase.from("machinery").update({ status: "active" }).eq("id", booking.machinery_id)
+    }
   }
 
   const { error } = await supabase.from("bookings").update({ status }).eq("id", bookingId)

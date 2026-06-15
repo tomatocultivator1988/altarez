@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { revalidatePath } from "next/cache"
+import { loginSchema, registerSchema } from "@/lib/validators/auth"
 
 type AuthState = { error: string; success?: string }
 
@@ -11,15 +12,13 @@ export async function login(_prevState: AuthState, formData: FormData): Promise<
   const email = formData.get("email") as string
   const password = formData.get("password") as string
 
+  const parsed = loginSchema.safeParse({ email, password })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
   const { error, data } = await supabase.auth.signInWithPassword({ email, password })
   if (error || !data.user || !data.session) {
     return { error: error?.message ?? "Login failed" }
   }
-
-  await supabase.auth.setSession({
-    access_token: data.session.access_token,
-    refresh_token: data.session.refresh_token,
-  })
 
   const admin = createAdminClient()
   const { data: profile, error: profileError } = await admin
@@ -47,9 +46,16 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   const lastName = formData.get("lastName") as string
   const username = formData.get("username") as string
 
-  if (password !== confirmPassword) return { error: "Passwords do not match" }
-  if (password.length < 6) return { error: "Password must be at least 6 characters" }
-  if (!["farmer", "lender"].includes(role)) return { error: "Invalid role" }
+  const parsed = registerSchema.safeParse({
+    email,
+    password,
+    confirmPassword,
+    role,
+    firstName,
+    lastName,
+    username,
+  })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
 
   const { error, data } = await supabase.auth.signUp({
     email,
@@ -93,35 +99,4 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
 
   revalidatePath("/", "layout")
   return { success: "/dashboard", error: "" }
-}
-
-export async function adminLogin(_prevState: AuthState, formData: FormData): Promise<AuthState> {
-  const supabase = await createClient()
-  const email = formData.get("email") as string
-  const password = formData.get("password") as string
-
-  const { error, data } = await supabase.auth.signInWithPassword({ email, password })
-  if (error || !data.user || !data.session) {
-    return { error: error?.message ?? "Login failed" }
-  }
-
-  await supabase.auth.setSession({
-    access_token: data.session.access_token,
-    refresh_token: data.session.refresh_token,
-  })
-
-  const admin = createAdminClient()
-  const { data: profile } = await admin
-    .from("profiles")
-    .select("role")
-    .eq("id", data.user.id)
-    .single()
-
-  if (profile?.role !== "admin") {
-    await supabase.auth.signOut()
-    return { error: "Access denied. Admin only." }
-  }
-
-  revalidatePath("/", "layout")
-  return { success: "/admin/dashboard", error: "" }
 }

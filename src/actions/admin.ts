@@ -23,6 +23,7 @@ export async function adminUpdateUserRole(userId: string, newRole: string) {
   }
 
   revalidatePath("/admin/users")
+  revalidatePath("/admin/dashboard")
 }
 
 export async function adminDeleteUser(userId: string) {
@@ -40,6 +41,12 @@ export async function adminDeleteUser(userId: string) {
   if (error) return { error: error.message }
 
   revalidatePath("/admin/users")
+  revalidatePath("/admin/machinery")
+  revalidatePath("/admin/bookings")
+  revalidatePath("/admin/dashboard")
+  revalidatePath("/machinery")
+  revalidatePath("/dashboard")
+  revalidatePath("/bookings")
 }
 
 export async function adminGetUserDetail(userId: string) {
@@ -87,9 +94,23 @@ export async function adminDeleteMachinery(machineryId: string) {
   const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single()
   if (profile?.role !== "admin") return { error: "Admin only" }
 
+  const { count } = await admin
+    .from("bookings")
+    .select("id", { count: "exact", head: true })
+    .eq("machinery_id", machineryId)
+    .in("status", ["pending", "approved", "active"])
+
+  if ((count ?? 0) > 0) {
+    return { error: `Cannot delete: there are ${count} active or pending booking(s). Cancel or complete them first.` }
+  }
+
   const { error } = await admin.from("machinery").delete().eq("id", machineryId)
   if (error) return { error: error.message }
 
   revalidatePath("/admin/machinery")
+  revalidatePath("/admin/dashboard")
   revalidatePath("/machinery")
+  revalidatePath("/machinery/manage")
+  revalidatePath("/dashboard")
+  revalidatePath("/bookings")
 }

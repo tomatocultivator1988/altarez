@@ -14,12 +14,31 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
 
   if (!user) return null
 
-  const admin = createAdminClient()
-  const { data: b } = await admin
+  const supabaseRegular = await createClient()
+  let { data: b } = await supabaseRegular
     .from("bookings")
     .select("*, machinery(*), renter:profiles!bookings_renter_id_fkey(*), owner:profiles!bookings_owner_id_fkey(*)")
     .eq("id", id)
     .single()
+
+  if (!b) {
+    const admin = createAdminClient()
+    const { data: profile } = await admin.from("profiles").select("role").eq("id", user.id).single()
+    if (profile?.role !== "admin") {
+      return (
+        <div className="py-16 text-center text-white/60">
+          Booking not found
+          <Link href="/bookings" className="block mt-2 text-sm text-primary/80 hover:text-primary">Back to bookings</Link>
+        </div>
+      )
+    }
+    const { data: adminBooking } = await admin
+      .from("bookings")
+      .select("*, machinery(*), renter:profiles!bookings_renter_id_fkey(*), owner:profiles!bookings_owner_id_fkey(*)")
+      .eq("id", id)
+      .single()
+    b = adminBooking
+  }
 
   if (!b) {
     return (
