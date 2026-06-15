@@ -4,7 +4,9 @@ import { useState, useActionState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { login, register } from "@/actions/auth"
 import Link from "next/link"
-import { ArrowRight, Tractor, X, Leaf, Shield, Users } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { ArrowRight, Tractor, X, Leaf, Shield, Users, Menu } from "lucide-react"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
 type ModalType = "login" | "register" | "about" | null
 
@@ -14,6 +16,7 @@ const registerInitial = { error: "", success: "" }
 export default function LandingClient() {
   const router = useRouter()
   const [activeModal, setActiveModal] = useState<ModalType>(null)
+  const [navOpen, setNavOpen] = useState(false)
 
   const handleLogin = useCallback(async (_prev: typeof loginInitial, formData: FormData) => {
     const result = await login(_prev, formData)
@@ -67,21 +70,29 @@ export default function LandingClient() {
           <span className="text-xl font-semibold tracking-tight">Agrimalachina</span>
         </Link>
         <nav className="flex items-center gap-1">
+          <div className="hidden gap-1 lg:flex items-center">
+            <button
+              onClick={closeModal}
+              className="rounded-lg px-4 py-2 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              Home
+            </button>
+            <button
+              onClick={() => setActiveModal("about")}
+              className="rounded-lg px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              About Us
+            </button>
+          </div>
           <button
-            onClick={closeModal}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+            onClick={() => setNavOpen(true)}
+            className="rounded-lg p-2 text-white/80 transition-colors hover:bg-white/10 lg:hidden"
           >
-            Home
-          </button>
-          <button
-            onClick={() => setActiveModal("about")}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            About Us
+            <Menu className="size-5" />
           </button>
           <button
             onClick={() => setActiveModal("login")}
-            className="ml-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
+            className="ml-2 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 sm:px-5 py-2 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30"
           >
             Log In
             <ArrowRight className="size-3.5" />
@@ -102,7 +113,7 @@ export default function LandingClient() {
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary/90">
             Mina, Iloilo
           </p>
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-white lg:text-6xl lg:leading-[1.05]">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight tracking-tight text-white lg:text-6xl lg:leading-[1.05]">
             WELCOME TO
             <br />
             <span className="text-primary">AGRIMALACHINA</span>
@@ -115,14 +126,14 @@ export default function LandingClient() {
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/machinery"
-              className="group inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 sm:px-7 sm:py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5"
             >
               Explore Machinery
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <button
               onClick={() => setActiveModal("register")}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-7 py-3.5 text-base font-medium text-white transition-all hover:border-white/50 hover:bg-white/10 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-5 py-3 sm:px-7 sm:py-3.5 text-base font-medium text-white transition-all hover:border-white/50 hover:bg-white/10 hover:-translate-y-0.5"
             >
               Get Started
             </button>
@@ -135,12 +146,11 @@ export default function LandingClient() {
           style={{ opacity: isModalOpen ? 1 : 0 }}
         >
           <div
-            className="pointer-events-auto w-full transition-all duration-500 ease-out"
-            style={{
-              maxWidth: activeModal === "about" ? "640px" : "448px",
-              opacity: isModalOpen ? 1 : 0,
-              transform: isModalOpen ? "translateX(0)" : "translateX(20px)",
-            }}
+            className={cn(
+              "pointer-events-auto w-full transition-all duration-500 ease-out overflow-y-auto max-h-[85vh]",
+              activeModal === "about" ? "max-w-lg md:max-w-2xl" : "max-w-sm md:max-w-md",
+              isModalOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5"
+            )}
           >
             {/* Close button — top right of modal area */}
             <button
@@ -233,7 +243,7 @@ export default function LandingClient() {
                         {regState.error}
                       </div>
                     )}
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label htmlFor="reg-first" className="mb-1 block text-xs font-medium text-white/70">First Name</label>
                         <input id="reg-first" name="firstName" required className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 backdrop-blur-sm focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/20" />
@@ -251,7 +261,7 @@ export default function LandingClient() {
                       <label htmlFor="reg-email" className="mb-1 block text-xs font-medium text-white/70">Email</label>
                       <input id="reg-email" name="email" type="email" required className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 backdrop-blur-sm focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/20" />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label htmlFor="reg-pass" className="mb-1 block text-xs font-medium text-white/70">Password</label>
                         <input id="reg-pass" name="password" type="password" required className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 backdrop-blur-sm focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/20" />
@@ -344,6 +354,26 @@ export default function LandingClient() {
           </div>
         </div>
       </main>
+
+      {/* Mobile Navigation Sheet */}
+      <Sheet open={navOpen} onOpenChange={setNavOpen}>
+        <SheetContent side="right" className="border-l border-white/10 bg-black/95 backdrop-blur-xl text-white p-0 gap-0">
+          <SheetHeader className="flex h-14 shrink-0 items-center border-b border-white/10 px-4">
+            <SheetTitle className="text-lg font-semibold text-white">Menu</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-1 p-3" onClick={() => setNavOpen(false)}>
+            <button onClick={closeModal} className="rounded-lg px-4 py-3 text-left text-base font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white">
+              Home
+            </button>
+            <button onClick={() => { setActiveModal("about"); setNavOpen(false) }} className="rounded-lg px-4 py-3 text-left text-base font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white">
+              About Us
+            </button>
+            <button onClick={() => { setActiveModal("login"); setNavOpen(false) }} className="mt-2 rounded-lg bg-primary px-4 py-3 text-base font-semibold text-primary-foreground">
+              Log In
+            </button>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Footer */}
       <footer className="relative z-10 py-5 text-center text-sm text-white/30">

@@ -48,7 +48,8 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-xl border border-white/10">
+      {/* Desktop table */}
+      <div className="hidden md:block overflow-x-auto rounded-xl border border-white/10">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/10 text-left text-white/50">
@@ -95,6 +96,35 @@ export function AdminUsersTable({ users }: { users: UserRow[] }) {
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-3">
+        {users.map((u) => {
+          const role = u.role
+          const isAdmin = role === "admin"
+          return (
+            <div key={u.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="flex items-start justify-between gap-2">
+                <button onClick={() => openDetail(u)} className="font-medium text-left hover:text-primary transition-colors">
+                  {u.first_name} {u.last_name}
+                </button>
+                <Badge className={ROLE_BADGES[role] ?? ""}>
+                  {role === "admin" ? <ShieldAlert className="mr-1 size-3 inline" /> : role === "lender" ? <Shield className="mr-1 size-3 inline" /> : <User className="mr-1 size-3 inline" />}
+                  {role}
+                </Badge>
+              </div>
+              <div className="mt-1.5 text-sm text-white/50">@{u.username}</div>
+              <div className="mt-0.5 text-sm text-white/40">{u.barangay ?? "—"}</div>
+              <div className="mt-0.5 text-xs text-white/30">Joined {formatDate(u.created_at)}</div>
+              {!isAdmin && (
+                <div className="mt-3 pt-3 border-t border-white/5">
+                  <AdminUserActions userId={u.id} />
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {modal && (
