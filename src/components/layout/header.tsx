@@ -22,9 +22,10 @@ interface HeaderProps {
     username: string
     avatarUrl: string | null
   }
+  onMenuClick?: () => void
 }
 
-export function Header({ user }: HeaderProps) {
+export function Header({ user, onMenuClick }: HeaderProps) {
   const router = useRouter()
   const supabase = createClient()
   const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
@@ -39,7 +40,7 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className="relative z-10 flex h-14 shrink-0 items-center gap-4 border-b border-white/10 bg-black/40 backdrop-blur-lg px-4 lg:px-6">
-      <button className={cn(iconBtnClass, "lg:hidden")}>
+      <button className={cn(iconBtnClass, "lg:hidden")} onClick={onMenuClick}>
         <Menu className="size-5" />
       </button>
       <div className="flex-1" />
