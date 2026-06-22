@@ -63,11 +63,11 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
           </select>
         </div>
         <div><label className={labelClass}>Description</label><input name="description" defaultValue={machinery?.description ?? ""} className={inputClass} /></div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div><label className={labelClass}>Rate per Hectare (PHP)</label><input name="rate_per_hectare" type="number" min={0} step={0.01} defaultValue={machinery?.rate_per_hectare?.toString() ?? ""} className={inputClass} /></div>
           <div><label className={labelClass}>Capacity (ha)</label><input name="hectares_capacity" type="number" min={0} step={0.01} defaultValue={machinery?.hectares_capacity?.toString() ?? ""} className={inputClass} /></div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div><label className={labelClass}>Serial Number</label><input name="serial_number" defaultValue={machinery?.serial_number ?? ""} className={inputClass} /></div>
           <div><label className={labelClass}>Barangay</label><input name="barangay" defaultValue={machinery?.barangay ?? ""} className={inputClass} /></div>
         </div>
@@ -76,7 +76,10 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
           <label className={labelClass}>Image</label>
           <input type="hidden" name="existing_image_url" value={existingImageUrl} />
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click() }}
             className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-white/15 bg-white/5 px-4 py-6 text-white/50 transition hover:border-primary/40 hover:bg-white/10"
           >
             {preview ? (
@@ -103,7 +106,7 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
             </select>
           </div>
         )}
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-wrap gap-2 sm:gap-3 pt-2">
           <button type="submit" disabled={pending} className={cn(buttonVariants(), "gap-2")}>
             {pending ? "Saving..." : isEdit ? "Save Changes" : "Add Machinery"}
           </button>

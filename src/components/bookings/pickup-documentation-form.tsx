@@ -41,7 +41,7 @@ export function PickupDocumentationForm({ bookingId, onSuccess, onCancel }: { bo
 
   return (
     <Dialog open onOpenChange={() => onCancel?.()}>
-      <DialogContent className="max-w-md border-white/10 bg-zinc-900 text-white">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto border-white/10 bg-zinc-900 text-white">
         <DialogTitle className="text-lg font-semibold">Document Pickup — Before Handover</DialogTitle>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
@@ -99,11 +99,11 @@ export function PickupDocumentationForm({ bookingId, onSuccess, onCancel }: { bo
             )}
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onCancel} className={cn(buttonVariants({ variant: "outline" }), "flex-1")}>Cancel</button>
-            <button type="submit" disabled={loading || !equipmentPreview || !selfiePreview} className={cn(buttonVariants(), "flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50")}>
-              {loading ? <Loader2 className="mr-2 size-4 animate-spin inline" /> : null}
-              Confirm Pickup → Mark as Active
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2">
+            <button type="button" onClick={onCancel} className={cn(buttonVariants({ variant: "outline" }), "flex-1 min-w-[80px]")}>Cancel</button>
+            <button type="submit" disabled={loading || !equipmentPreview || !selfiePreview} className={cn(buttonVariants(), "flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-sm")}>
+              {loading ? <Loader2 className="mr-1 size-4 animate-spin inline" /> : null}
+              Confirm Pickup
             </button>
           </div>
         </form>

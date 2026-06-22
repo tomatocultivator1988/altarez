@@ -77,7 +77,7 @@ export default function NewBookingPage() {
               <AlertCircle className="size-4 shrink-0" /><p>{state.error}</p>
             </div>
           )}
-          <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div><label className={labelClass}>Start Date *</label><input name="starting_date" type="date" required className={inputClass} min={new Date().toISOString().split("T")[0]} /></div>
             <div><label className={labelClass}>End Date *</label><input name="ending_date" type="date" required className={inputClass} min={new Date().toISOString().split("T")[0]} /></div>
           </div>

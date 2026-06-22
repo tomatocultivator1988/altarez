@@ -31,14 +31,14 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
           <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
             <h3 className="text-sm font-medium text-white/60 mb-4">Personal Information</h3>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-white/50">Name</span><span>{profile.first_name} {profile.last_name}</span></div>
-              <div className="flex justify-between"><span className="text-white/50">Username</span><span>@{profile.username}</span></div>
-              <div className="flex justify-between"><span className="text-white/50">Phone</span><span>{profile.phone_number || "—"}</span></div>
-              <div className="flex justify-between"><span className="text-white/50">Role</span><span className="capitalize">{profile.role}</span></div>
-              {profile.barangay && <div className="flex justify-between"><span className="text-white/50">Barangay</span><span>{profile.barangay}</span></div>}
-              {profile.address && <div className="flex justify-between"><span className="text-white/50">Address</span><span>{profile.address}</span></div>}
-              {profile.is_fca_member && <div className="flex justify-between"><span className="text-white/50">FCA Member</span><span className="text-emerald-400">Yes</span></div>}
-              {lenderProfile && <div className="flex justify-between"><span className="text-white/50">Hectares</span><span>{lenderProfile.hectares} ha</span></div>}
+              <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Name</span><span className="truncate">{profile.first_name} {profile.last_name}</span></div>
+              <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Username</span><span className="truncate">@{profile.username}</span></div>
+              <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Phone</span><span>{profile.phone_number || "—"}</span></div>
+              <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Role</span><span className="capitalize">{profile.role}</span></div>
+              {profile.barangay && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Barangay</span><span>{profile.barangay}</span></div>}
+              {profile.address && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Address</span><span>{profile.address}</span></div>}
+              {profile.is_fca_member && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">FCA Member</span><span className="text-emerald-400">Yes</span></div>}
+              {lenderProfile && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Hectares</span><span>{lenderProfile.hectares} ha</span></div>}
             </div>
           </div>
         </>

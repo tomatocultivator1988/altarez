@@ -29,7 +29,7 @@ export function ProfileEditForm({ profile }: { profile: Record<string, unknown> 
       <h3 className="text-sm font-medium text-white/60">Edit Profile</h3>
       {error && <p className="rounded-lg bg-red-500/15 p-3 text-sm text-red-300">{error}</p>}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="mb-1 block text-xs text-white/50">First Name</label>
           <input name="firstName" className={inputClass} defaultValue={profile.first_name as string} required />

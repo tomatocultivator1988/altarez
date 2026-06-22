@@ -131,11 +131,11 @@ export function ReturnDocumentationForm({ bookingId, onSuccess, onCancel }: { bo
             </div>
           )}
 
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onCancel} className={cn(buttonVariants({ variant: "outline" }), "flex-1")}>Cancel</button>
-            <button type="submit" disabled={loading || !equipmentPreview} className={cn(buttonVariants(), "flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50")}>
-              {loading ? <Loader2 className="mr-2 size-4 animate-spin inline" /> : null}
-              Confirm Return → Mark Completed
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-2">
+            <button type="button" onClick={onCancel} className={cn(buttonVariants({ variant: "outline" }), "flex-1 min-w-[80px]")}>Cancel</button>
+            <button type="submit" disabled={loading || !equipmentPreview} className={cn(buttonVariants(), "flex-1 min-w-[120px] bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-sm")}>
+              {loading ? <Loader2 className="mr-1 size-4 animate-spin inline" /> : null}
+              Confirm Return
             </button>
           </div>
         </form>

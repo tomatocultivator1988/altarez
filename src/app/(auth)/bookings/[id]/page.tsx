@@ -69,11 +69,11 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
 
       <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">
         <div className="p-6 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-xl font-bold">{machine?.machine_name as string ?? "Machinery"}</h2>
             <Badge className={status?.color}>{status?.label}</Badge>
           </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div><span className="text-white/50">Start:</span> {formatDate(b.starting_date)}</div>
             <div><span className="text-white/50">End:</span> {formatDate(b.ending_date)}</div>
             {b.requested_hectares != null && <div><span className="text-white/50">Hectares:</span> {b.requested_hectares} ha</div>}

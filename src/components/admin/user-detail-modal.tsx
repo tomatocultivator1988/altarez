@@ -64,7 +64,7 @@ export function UserDetailModal({ user, detail, open, onOpenChange }: UserDetail
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-white/10 bg-gray-900 text-white sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] overflow-y-auto border-white/10 bg-gray-900 text-white sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
             <Badge className={ROLE_BADGES[user.role] ?? ""}>
@@ -81,7 +81,7 @@ export function UserDetailModal({ user, detail, open, onOpenChange }: UserDetail
             <p className="text-sm text-white/50">{detail?.email ?? "..."}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             {user.phone_number && (
               <div className="flex items-center gap-2 text-white/60">
                 <Phone className="size-3.5 shrink-0" />
@@ -141,7 +141,7 @@ export function UserDetailModal({ user, detail, open, onOpenChange }: UserDetail
           </div>
 
           {!isAdmin && (
-            <div className="flex gap-2 pt-2">
+            <div className="flex flex-wrap gap-2 pt-2">
               <select
                 defaultValue={user.role}
                 onChange={(e) => handleRoleChange(e.target.value)}

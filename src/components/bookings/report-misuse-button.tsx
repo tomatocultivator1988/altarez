@@ -32,7 +32,7 @@ export function ReportMisuseButton({ bookingId }: { bookingId: string }) {
         Report Misuse
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md border-white/10 bg-zinc-900 text-white">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto border-white/10 bg-zinc-900 text-white">
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
             <AlertTriangle className="size-5 text-yellow-400" /> Report Misuse
           </DialogTitle>

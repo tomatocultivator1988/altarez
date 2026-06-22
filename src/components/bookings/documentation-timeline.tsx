@@ -42,7 +42,7 @@ export async function DocumentationTimeline({ bookingId }: { bookingId: string }
                 <img
                   src={u.blob_url}
                   alt={u.upload_type}
-                  className="h-24 w-24 rounded-lg object-cover ring-1 ring-white/10 hover:ring-white/30 transition"
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover ring-1 ring-white/10 hover:ring-white/30 transition"
                 />
               </a>
             ))}
@@ -53,7 +53,7 @@ export async function DocumentationTimeline({ bookingId }: { bookingId: string }
           <h3 className="mb-1 font-semibold text-white/60">
             Pickup Documentation &#x23F3; Pending
           </h3>
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-white/40 break-words">
             Photos and hour meter reading must be uploaded before this booking can be marked as Active.
           </p>
         </div>
@@ -82,7 +82,7 @@ export async function DocumentationTimeline({ bookingId }: { bookingId: string }
                 <img
                   src={u.blob_url}
                   alt={u.upload_type}
-                  className="h-24 w-24 rounded-lg object-cover ring-1 ring-white/10 hover:ring-white/30 transition"
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover ring-1 ring-white/10 hover:ring-white/30 transition"
                 />
               </a>
             ))}
@@ -93,7 +93,7 @@ export async function DocumentationTimeline({ bookingId }: { bookingId: string }
           <h3 className="mb-1 font-semibold text-white/60">
             Return Documentation &#x23F3; Pending
           </h3>
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-white/40 break-words">
             Photos and hour meter reading must be uploaded before this booking can be marked as Completed.
           </p>
         </div>
