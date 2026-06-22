@@ -88,10 +88,10 @@ export default function ManageMachineryPage() {
                   )}
 
                   <div className="grid grid-cols-2 gap-2 text-xs text-white/50">
-                    {m.rate_per_hour != null && (
+                    {m.rate_per_hectare != null && (
                       <div className="flex items-center gap-1">
                         <PhilippinePeso className="size-3" />
-                        <span>{formatCurrency(m.rate_per_hour as number)}/hr</span>
+                        <span>{formatCurrency(m.rate_per_hectare as number)}/ha</span>
                       </div>
                     )}
                     {m.hectares_capacity != null && (

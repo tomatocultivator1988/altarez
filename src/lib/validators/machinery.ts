@@ -9,7 +9,7 @@ export const machinerySchema = z.object({
   machine_type: z.enum(machineTypeValues),
   serial_number: z.string().optional(),
   hectares_capacity: z.number().min(0).optional(),
-  rate_per_hour: z.number().min(0, 'Rate must be positive').optional(),
+  rate_per_hectare: z.number().min(0, 'Rate must be positive').optional(),
   barangay: z.string().optional(),
   image_url: z.string().url().optional(),
 })

@@ -1,0 +1,42 @@
+# Graphify ignore — keep the first build code-focused, local, and free.
+# .gitignore is already respected automatically; these are extra excludes.
+
+# Dependencies / build output (belt-and-suspenders)
+node_modules/
+.next/
+out/
+build/
+coverage/
+.turbo/
+.vercel/
+
+# Lockfiles / generated
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+next-env.d.ts
+src/generated/
+
+# Binary assets (would require an LLM backend to analyze)
+public/
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.svg
+*.ico
+*.docx
+*.pdf
+*.map
+
+# Prose docs (semantic extraction needs an LLM API key) — keep first build free
+*.md
+*.mdx
+*.yaml
+*.yml
+*.txt
+*.html
+*.htm
+*.rst
+*.qmd

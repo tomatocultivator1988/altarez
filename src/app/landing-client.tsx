@@ -278,6 +278,11 @@ export default function LandingClient() {
                         <option value="lender">Lender</option>
                       </select>
                     </div>
+                    <div>
+                      <label htmlFor="reg-id-doc" className="mb-1 block text-xs font-medium text-white/70">ID Document (optional)</label>
+                      <input id="reg-id-doc" name="id_document" type="file" accept="image/*,.pdf" className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/60 file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-sm file:text-white hover:file:bg-white/20 backdrop-blur-sm focus:outline-none" />
+                      <p className="mt-1 text-xs text-white/30">Upload a valid ID (PhilSys, UMID, Driver's License) for identity verification</p>
+                    </div>
                     <button type="submit" disabled={regPending} className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 disabled:opacity-50">
                       {regPending ? "Creating Account..." : "Create Account"}
                     </button>

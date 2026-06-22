@@ -39,3 +39,5 @@ pnpm-debug.log*
 # prisma (removed)
 prisma/migrations/
 src/generated/
+
+.vercel

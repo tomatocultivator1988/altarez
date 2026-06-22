@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { BOOKING_STATUSES } from "@/lib/constants"
 import { formatCurrency, formatDate } from "@/lib/utils"
 import { AdminBookingActions } from "@/components/admin/booking-actions"
+import Link from "next/link"
 
 export default async function AdminBookingsPage() {
   const supabase = createAdminClient()
@@ -27,6 +28,7 @@ export default async function AdminBookingsPage() {
                   <th className="p-3 font-medium">Owner</th><th className="p-3 font-medium">Dates</th>
                   <th className="p-3 font-medium">Amount</th><th className="p-3 font-medium">Status</th>
                   <th className="p-3 font-medium">Actions</th>
+                  <th className="p-3 font-medium" />
                 </tr>
               </thead>
               <tbody>
@@ -45,6 +47,9 @@ export default async function AdminBookingsPage() {
                       <td className="p-3"><Badge className={status?.color}>{status?.label}</Badge></td>
                       <td className="p-3">
                         <AdminBookingActions bookingId={b.id} status={b.status} />
+                      </td>
+                      <td className="p-3">
+                        <Link href={`/bookings/${b.id}`} className="text-xs text-white/40 hover:text-white underline">View</Link>
                       </td>
                     </tr>
                   )
@@ -73,8 +78,9 @@ export default async function AdminBookingsPage() {
                   <div className="mt-1 text-sm text-white/50">
                     {formatDate(b.starting_date)}{b.total_amount != null && ` · ${formatCurrency(b.total_amount)}`}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-white/5">
+                  <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
                     <AdminBookingActions bookingId={b.id} status={b.status} />
+                    <Link href={`/bookings/${b.id}`} className="text-xs text-white/40 hover:text-white underline">View details</Link>
                   </div>
                 </div>
               )

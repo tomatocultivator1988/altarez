@@ -10,13 +10,13 @@ export const bookingSchema = z.object({
 }).refine(
   (data) => new Date(data.ending_date) >= new Date(data.starting_date),
   { message: 'End date must be after start date', path: ['ending_date'] }
+).refine(
+  (data) => {
+    const now = new Date()
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    return data.starting_date >= today
+  },
+  { message: 'Start date cannot be in the past', path: ['starting_date'] }
 )
 
-export const bookingApprovalSchema = z.object({
-  booking_id: z.string().uuid(),
-  action: z.enum(['approve', 'deny']),
-  notes: z.string().optional(),
-})
-
 export type BookingInput = z.infer<typeof bookingSchema>
-export type BookingApprovalInput = z.infer<typeof bookingApprovalSchema>

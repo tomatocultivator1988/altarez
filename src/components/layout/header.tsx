@@ -28,7 +28,7 @@ interface HeaderProps {
 export function Header({ user, onMenuClick }: HeaderProps) {
   const router = useRouter()
   const supabase = createClient()
-  const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
+  const initials = `${(user.firstName?.[0] ?? "")}${(user.lastName?.[0] ?? "")}`.toUpperCase() || "?"
 
   async function handleLogout() {
     await supabase.auth.signOut()

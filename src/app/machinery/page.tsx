@@ -94,7 +94,7 @@ export default async function MachineryPage({
                       {MACHINERY_TYPES.find((t) => t.value === m.machine_type)?.label ?? m.machine_type}
                     </p>
                     <div className="mt-2 flex items-center gap-4 text-sm text-white/40">
-                      {m.rate_per_hour != null && <span>{formatCurrency(m.rate_per_hour)}/hr</span>}
+                      {m.rate_per_hectare != null && <span>{formatCurrency(m.rate_per_hectare)}/ha</span>}
                       {m.barangay && <span className="flex items-center gap-1"><MapPin className="size-3" />{m.barangay}</span>}
                     </div>
                     {owner && <p className="mt-2 text-xs text-white/30">by {owner.first_name} {owner.last_name}</p>}

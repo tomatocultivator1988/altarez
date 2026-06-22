@@ -37,5 +37,30 @@ export const USER_ROLES = {
   admin: { label: 'Admin' },
 } as const
 
+export const DOCUMENTATION_UPLOAD_TYPES = {
+  pickup_equipment:  'pickup_equipment',
+  pickup_selfie:     'pickup_selfie',
+  pickup_hour_meter: 'pickup_hour_meter',
+  return_equipment:  'return_equipment',
+  return_hour_meter: 'return_hour_meter',
+  return_damage:     'return_damage',
+} as const
+
+export const REPORT_TYPES = {
+  suspicious_activity: { label: 'Suspicious Activity', color: 'bg-yellow-100 text-yellow-800' },
+  damage:              { label: 'Damage Report',       color: 'bg-red-100 text-red-800'    },
+  subletting:          { label: 'Subletting/Sharing',   color: 'bg-orange-100 text-orange-800' },
+  other:               { label: 'Other',                color: 'bg-gray-100 text-gray-800'   },
+} as const
+
+export const DISPUTE_STATUSES = {
+  open:              { label: 'Open',                color: 'bg-yellow-100 text-yellow-800' },
+  resolved_lender:   { label: 'Resolved — Lender',   color: 'bg-green-100 text-green-800'  },
+  resolved_renter:   { label: 'Resolved — Renter',   color: 'bg-green-100 text-green-800'  },
+  admin_resolved:    { label: 'Resolved — Admin',    color: 'bg-blue-100 text-blue-800'   },
+} as const
+
+export const ANOMALY_THRESHOLD = 50
+
 export const ITEMS_PER_PAGE = 12
 export const ADMIN_PAGE_SIZE = 20

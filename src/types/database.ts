@@ -36,6 +36,16 @@ export type Database = {
         Insert: UploadInsert
         Update: UploadUpdate
       }
+      reports: {
+        Row: Report
+        Insert: ReportInsert
+        Update: ReportUpdate
+      }
+      disputes: {
+        Row: Dispute
+        Insert: DisputeInsert
+        Update: DisputeUpdate
+      }
     }
     Functions: {
       check_machinery_availability: {
@@ -64,7 +74,11 @@ export type MachineryType =
 export type BookingStatus = 'pending' | 'approved' | 'active' | 'completed' | 'denied' | 'cancelled'
 export type PaymentStatus = 'unpaid' | 'paid' | 'refunded'
 export type NotificationType = 'info' | 'success' | 'warning' | 'error'
-export type UploadType = 'receipt' | 'machinery_image' | 'document' | 'other'
+export type UploadType = 'receipt' | 'machinery_image' | 'document' | 'other' | 'pickup_equipment' | 'pickup_selfie' | 'pickup_hour_meter' | 'return_equipment' | 'return_hour_meter' | 'return_damage'
+export type ReportType = 'suspicious_activity' | 'damage' | 'subletting' | 'other'
+export type ReportStatus = 'pending' | 'reviewed' | 'resolved'
+export type DisputeStatus = 'open' | 'resolved_lender' | 'resolved_renter' | 'admin_resolved'
+export type PaymentMethod = 'cash' | 'bank_transfer' | 'gcash' | 'maya'
 
 export interface Profile {
   id: string
@@ -77,6 +91,10 @@ export interface Profile {
   barangay: string | null
   address: string | null
   avatar_url: string | null
+  strikes: number
+  is_banned: boolean
+  banned_at: string | null
+  banned_reason: string | null
   created_at: string
   updated_at: string
 }
@@ -106,7 +124,7 @@ export interface Machinery {
   serial_number: string | null
   image_url: string | null
   hectares_capacity: number | null
-  rate_per_hour: number | null
+  rate_per_hectare: number | null
   barangay: string | null
   created_at: string
   updated_at: string
@@ -126,6 +144,19 @@ export interface Booking {
   ending_date: string
   estimated_hours: number | null
   total_amount: number | null
+  actual_hectares: number | null
+  actual_hours: number | null
+  hour_meter_start: number | null
+  hour_meter_end: number | null
+  security_deposit: number | null
+  pickup_documented_at: string | null
+  pickup_documented_by: string | null
+  return_documented_at: string | null
+  return_documented_by: string | null
+  co_renter_id: string | null
+  anomaly_flagged: boolean
+  anomaly_note: string | null
+  admin_override: boolean
   payment_status: PaymentStatus
   notes: string | null
   created_at: string
@@ -139,7 +170,7 @@ export interface Payment {
   id: string
   booking_id: string
   amount: number
-  payment_method: string
+  payment_method: PaymentMethod
   payment_date: string
   receipt_url: string | null
   created_at: string
@@ -177,3 +208,36 @@ export interface Upload {
 
 export type UploadInsert = Omit<Upload, 'id' | 'created_at'>
 export type UploadUpdate = Partial<Omit<UploadInsert, 'user_id'>>
+
+export interface Report {
+  id: string
+  reporter_id: string
+  booking_id: string
+  report_type: ReportType
+  description: string
+  status: ReportStatus
+  resolved_by: string | null
+  resolution_notes: string | null
+  created_at: string
+  resolved_at: string | null
+  updated_at: string
+}
+
+export type ReportInsert = Omit<Report, 'id' | 'created_at' | 'resolved_at' | 'updated_at'>
+export type ReportUpdate = Partial<Omit<ReportInsert, 'reporter_id' | 'booking_id'> & { status: ReportStatus }>
+
+export interface Dispute {
+  id: string
+  booking_id: string
+  opened_by: string | null
+  reason: string
+  status: DisputeStatus
+  resolution_notes: string | null
+  resolved_by: string | null
+  created_at: string
+  resolved_at: string | null
+  updated_at: string
+}
+
+export type DisputeInsert = Omit<Dispute, 'id' | 'created_at' | 'resolved_at' | 'updated_at'>
+export type DisputeUpdate = Partial<Omit<DisputeInsert, 'booking_id'> & { status: DisputeStatus }>

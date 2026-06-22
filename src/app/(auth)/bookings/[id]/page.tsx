@@ -4,8 +4,12 @@ import { Badge } from "@/components/ui/badge"
 import { formatCurrency, formatDate } from "@/lib/utils"
 import { BOOKING_STATUSES } from "@/lib/constants"
 import { BookingActions } from "./booking-actions"
+import { DocumentationTimeline } from "@/components/bookings/documentation-timeline"
+import { DiscrepancyBanner } from "@/components/bookings/discrepancy-banner"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+
+export const dynamic = 'force-dynamic'
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
@@ -19,7 +23,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
     .from("bookings")
     .select("*, machinery(*), renter:profiles!bookings_renter_id_fkey(*), owner:profiles!bookings_owner_id_fkey(*)")
     .eq("id", id)
-    .single()
+    .maybeSingle()
 
   if (!b) {
     const admin = createAdminClient()
@@ -36,7 +40,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
       .from("bookings")
       .select("*, machinery(*), renter:profiles!bookings_renter_id_fkey(*), owner:profiles!bookings_owner_id_fkey(*)")
       .eq("id", id)
-      .single()
+      .maybeSingle()
     b = adminBooking
   }
 
@@ -61,6 +65,8 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
     <div className="mx-auto max-w-2xl space-y-6">
       <Link href="/bookings" className="inline-flex items-center gap-1 text-sm text-white/50 hover:text-white"><ArrowLeft className="size-4" /> Back</Link>
 
+      <DocumentationTimeline bookingId={id} />
+
       <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">
         <div className="p-6 space-y-4">
           <div className="flex items-center justify-between">
@@ -72,6 +78,8 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             <div><span className="text-white/50">End:</span> {formatDate(b.ending_date)}</div>
             {b.requested_hectares != null && <div><span className="text-white/50">Hectares:</span> {b.requested_hectares} ha</div>}
             {b.estimated_hours != null && <div><span className="text-white/50">Est. Hours:</span> {b.estimated_hours}</div>}
+            {b.actual_hectares != null && <div><span className="text-white/50">Actual Ha:</span> <span className="font-medium">{b.actual_hectares} ha</span></div>}
+            {b.actual_hours != null && <div><span className="text-white/50">Actual Hours:</span> <span className="font-medium">{b.actual_hours}</span></div>}
             {b.total_amount != null && <div><span className="text-white/50">Total:</span> {formatCurrency(b.total_amount)}</div>}
           </div>
           <div className="border-t border-white/10 pt-4 text-sm space-y-1">
@@ -79,6 +87,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             <p><span className="text-white/50">Owner:</span> {owner?.first_name} {owner?.last_name}</p>
           </div>
           {b.notes ? <p className="text-sm text-white/50">Notes: {String(b.notes)}</p> : null}
+          <DiscrepancyBanner bookingId={id} anomalyNote={b.anomaly_note as string | null} />
           <BookingActions bookingId={id} status={s} isOwner={isOwner} isRenter={isRenter} />
         </div>
       </div>

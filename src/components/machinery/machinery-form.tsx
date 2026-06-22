@@ -15,7 +15,7 @@ interface MachineryFormProps {
   machinery?: {
     id: string; machine_name: string; machine_type: string; description: string | null
     serial_number: string | null; hectares_capacity: number | null
-    rate_per_hour: number | null; barangay: string | null; image_url: string | null; status: string
+    rate_per_hectare: number | null; barangay: string | null; image_url: string | null; status: string
   }
 }
 
@@ -31,6 +31,7 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
   const [state, formAction, pending] = useActionState(action, initialState)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [preview, setPreview] = useState<string | null>(machinery?.image_url ?? null)
+  const [existingImageUrl, setExistingImageUrl] = useState<string>(machinery?.image_url ?? "")
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -41,6 +42,7 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
 
   function clearImage() {
     setPreview(null)
+    setExistingImageUrl("")
     if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
@@ -62,7 +64,7 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
         </div>
         <div><label className={labelClass}>Description</label><input name="description" defaultValue={machinery?.description ?? ""} className={inputClass} /></div>
         <div className="grid grid-cols-2 gap-4">
-          <div><label className={labelClass}>Rate per Hour (PHP)</label><input name="rate_per_hour" type="number" min={0} step={0.01} defaultValue={machinery?.rate_per_hour?.toString() ?? ""} className={inputClass} /></div>
+          <div><label className={labelClass}>Rate per Hectare (PHP)</label><input name="rate_per_hectare" type="number" min={0} step={0.01} defaultValue={machinery?.rate_per_hectare?.toString() ?? ""} className={inputClass} /></div>
           <div><label className={labelClass}>Capacity (ha)</label><input name="hectares_capacity" type="number" min={0} step={0.01} defaultValue={machinery?.hectares_capacity?.toString() ?? ""} className={inputClass} /></div>
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -72,7 +74,7 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
 
         <div>
           <label className={labelClass}>Image</label>
-          <input type="hidden" name="existing_image_url" value={machinery?.image_url ?? ""} />
+          <input type="hidden" name="existing_image_url" value={existingImageUrl} />
           <div
             onClick={() => fileInputRef.current?.click()}
             className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-white/15 bg-white/5 px-4 py-6 text-white/50 transition hover:border-primary/40 hover:bg-white/10"

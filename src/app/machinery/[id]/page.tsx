@@ -57,8 +57,8 @@ export default async function MachineryDetailPage({ params }: { params: Promise<
           {m.description && <p className="text-sm text-white/60">{m.description}</p>}
 
           <div className="grid grid-cols-2 gap-4 text-sm">
-            {m.rate_per_hour != null && (
-              <div className="flex items-center gap-2"><Clock className="size-4 text-white/40" /><span className="font-medium">{formatCurrency(m.rate_per_hour)}</span><span className="text-white/40">/ hour</span></div>
+            {m.rate_per_hectare != null && (
+              <div className="flex items-center gap-2"><Clock className="size-4 text-white/40" /><span className="font-medium">{formatCurrency(m.rate_per_hectare)}</span><span className="text-white/40">/ hectare</span></div>
             )}
             {m.hectares_capacity != null && <div><span className="font-medium">{m.hectares_capacity} ha</span><span className="text-white/40"> capacity</span></div>}
             {m.barangay && <div className="flex items-center gap-2"><MapPin className="size-4 text-white/40" /><span>{m.barangay}</span></div>}

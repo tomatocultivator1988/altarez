@@ -24,8 +24,6 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
 
   if (!profile) redirect("/login")
 
-  if (profile.role === "admin") redirect("/admin/dashboard")
-
   const headerUser = {
     firstName: profile.first_name,
     lastName: profile.last_name,

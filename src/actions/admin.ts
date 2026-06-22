@@ -46,7 +46,7 @@ export async function adminDeleteUser(userId: string) {
   revalidatePath("/admin/dashboard")
   revalidatePath("/machinery")
   revalidatePath("/dashboard")
-  revalidatePath("/bookings")
+  revalidatePath("/bookings", "page")
 }
 
 export async function adminGetUserDetail(userId: string) {
@@ -98,10 +98,9 @@ export async function adminDeleteMachinery(machineryId: string) {
     .from("bookings")
     .select("id", { count: "exact", head: true })
     .eq("machinery_id", machineryId)
-    .in("status", ["pending", "approved", "active"])
 
   if ((count ?? 0) > 0) {
-    return { error: `Cannot delete: there are ${count} active or pending booking(s). Cancel or complete them first.` }
+    return { error: `Cannot delete: there are ${count} booking(s) associated with this machinery. Set status to "inactive" instead.` }
   }
 
   const { error } = await admin.from("machinery").delete().eq("id", machineryId)
@@ -112,5 +111,5 @@ export async function adminDeleteMachinery(machineryId: string) {
   revalidatePath("/machinery")
   revalidatePath("/machinery/manage")
   revalidatePath("/dashboard")
-  revalidatePath("/bookings")
+  revalidatePath("/bookings", "page")
 }
