@@ -165,3 +165,13 @@ export async function deleteMachinery(id: string) {
   revalidatePath("/bookings", "page")
   redirect("/machinery/manage")
 }
+
+export async function getOwnMachinery() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+
+  const admin = createAdminClient()
+  const { data } = await admin.from("machinery").select("*").eq("owner_id", user.id).order("created_at", { ascending: false })
+  return data ?? []
+}

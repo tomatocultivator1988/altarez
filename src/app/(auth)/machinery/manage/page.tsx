@@ -1,8 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { createClient } from "@/lib/supabase/client"
-import { deleteMachinery } from "@/actions/machinery"
+import { deleteMachinery, getOwnMachinery } from "@/actions/machinery"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn, formatCurrency } from "@/lib/utils"
@@ -16,14 +15,15 @@ export default function ManageMachineryPage() {
   const [machinery, setMachinery] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return setLoading(false)
-      const { data } = await supabase.from("machinery").select("*").eq("owner_id", user.id).order("created_at", { ascending: false })
-      setMachinery(data ?? [])
+      try {
+        const data = await getOwnMachinery()
+        setMachinery(data as Record<string, unknown>[])
+      } catch (e) {
+        console.error("Machinery load error:", e)
+      }
       setLoading(false)
     }
     load()

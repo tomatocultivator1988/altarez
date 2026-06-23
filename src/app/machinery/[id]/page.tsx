@@ -9,6 +9,7 @@ import { Tractor, MapPin, Clock, User, Calendar } from "lucide-react"
 export default async function MachineryDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
   const { id } = await params
+  const { data: { user } } = await supabase.auth.getUser()
 
   const { data: m } = await supabase
     .from("machinery")
@@ -78,7 +79,7 @@ export default async function MachineryDetailPage({ params }: { params: Promise<
             )}
           </div>
 
-          {m.status === "active" && (
+          {m.status === "active" && m.owner_id !== user?.id && (
             <Link href={`/bookings/new/${m.id}`} className={cn(buttonVariants({ size: "lg" }), "w-full gap-2")}>
               <Calendar className="size-4" /> Request Rental
             </Link>
