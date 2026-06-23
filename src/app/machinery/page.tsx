@@ -77,7 +77,7 @@ export default async function MachineryPage({
                 <div className="group h-full overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10">
                   <div className="flex aspect-video items-center justify-center bg-white/5">
                     {m.image_url ? (
-                      <img src={m.image_url} alt={m.machine_name} className="h-full w-full object-cover" />
+                      <img src={m.image_url} alt={m.machine_name} className="h-full w-full object-contain" />
                     ) : (
                       <div className="flex flex-col items-center gap-1 text-white/20">
                         <Tractor className="size-8" />

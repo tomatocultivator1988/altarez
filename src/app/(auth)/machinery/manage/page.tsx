@@ -63,7 +63,7 @@ export default function ManageMachineryPage() {
                 {/* Image */}
                 <div className="flex aspect-[16/9] items-center justify-center bg-white/5">
                   {m.image_url ? (
-                    <img src={m.image_url as string} alt={m.machine_name as string} className="h-full w-full object-cover" />
+                    <img src={m.image_url as string} alt={m.machine_name as string} className="h-full w-full object-contain" />
                   ) : (
                     <div className="flex flex-col items-center gap-1 text-white/20">
                       <Tractor className="size-10" />

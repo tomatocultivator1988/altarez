@@ -38,7 +38,7 @@ export default async function MachineryDetailPage({ params }: { params: Promise<
       <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">
         <div className="flex aspect-video items-center justify-center bg-white/5">
           {m.image_url ? (
-            <img src={m.image_url} alt={m.machine_name} className="h-full w-full object-cover" />
+            <img src={m.image_url} alt={m.machine_name} className="h-full w-full object-contain" />
           ) : (
             <div className="flex flex-col items-center gap-2 text-white/20">
               <Tractor className="size-12" />
