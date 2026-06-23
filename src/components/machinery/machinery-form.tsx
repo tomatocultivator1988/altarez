@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils"
 import { MACHINERY_TYPES, MACHINERY_STATUSES } from "@/lib/constants"
 import { AlertCircle, ImageIcon, Upload, X } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
 
 const initialState = { error: "" }
 
@@ -84,7 +83,7 @@ export function MachineryForm({ machinery }: MachineryFormProps) {
           >
             {preview ? (
               <div className="relative w-full max-w-xs">
-                <Image src={preview} alt="Preview" width={400} height={300} className="rounded-lg object-cover" />
+                <img src={preview} alt="Preview" className="rounded-lg object-cover max-h-[300px] w-full" />
                 <button type="button" onClick={(e) => { e.stopPropagation(); clearImage() }} className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white"><X className="size-4" /></button>
               </div>
             ) : (

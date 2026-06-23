@@ -9,7 +9,6 @@ import { MACHINERY_STATUSES, MACHINERY_TYPES } from "@/lib/constants"
 import Link from "next/link"
 import { Tractor, Pencil, Trash2, MapPin, Hash, Gauge, PhilippinePeso } from "lucide-react"
 import { useState, useEffect } from "react"
-import Image from "next/image"
 
 export default function ManageMachineryPage() {
   const [machinery, setMachinery] = useState<Record<string, unknown>[]>([])
@@ -64,7 +63,7 @@ export default function ManageMachineryPage() {
                 {/* Image */}
                 <div className="flex aspect-[16/9] items-center justify-center bg-white/5">
                   {m.image_url ? (
-                    <Image src={m.image_url as string} alt={m.machine_name as string} width={400} height={225} className="h-full w-full object-cover" />
+                    <img src={m.image_url as string} alt={m.machine_name as string} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex flex-col items-center gap-1 text-white/20">
                       <Tractor className="size-10" />
