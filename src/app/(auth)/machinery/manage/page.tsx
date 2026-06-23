@@ -117,7 +117,7 @@ export default function ManageMachineryPage() {
                   <div className="flex gap-2 pt-1 border-t border-white/10">
                     <Link
                       href={`/machinery/manage/${m.id}/edit`}
-                      className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "flex-1 gap-1.5 text-xs text-white/60 hover:text-white hover:bg-white/10")}
+                      className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "flex-1 gap-1.5 text-xs text-white/80 hover:text-white hover:bg-white/10")}
                     >
                       <Pencil className="size-3.5" /> Edit
                     </Link>

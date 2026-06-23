@@ -49,7 +49,7 @@ export default async function AdminBookingsPage() {
                         <AdminBookingActions bookingId={b.id} status={b.status} />
                       </td>
                       <td className="p-3">
-                        <Link href={`/bookings/${b.id}`} className="text-xs text-white/40 hover:text-white underline">View</Link>
+                        <Link href={`/bookings/${b.id}`} className="text-xs text-white/70 hover:text-white underline">View</Link>
                       </td>
                     </tr>
                   )
@@ -80,7 +80,7 @@ export default async function AdminBookingsPage() {
                   </div>
                   <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between">
                     <AdminBookingActions bookingId={b.id} status={b.status} />
-                    <Link href={`/bookings/${b.id}`} className="text-xs text-white/40 hover:text-white underline">View details</Link>
+                    <Link href={`/bookings/${b.id}`} className="text-xs text-white/70 hover:text-white underline">View details</Link>
                   </div>
                 </div>
               )

@@ -72,7 +72,7 @@ export default function NotificationsPage() {
                   <p className="mt-1 text-xs text-white/30">{formatDate(n.created_at as string)}</p>
                 </div>
                 {!n.is_read && (
-                  <button onClick={(e) => { e.stopPropagation(); markRead(n.id as string) }} className="shrink-0 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/50 hover:text-white hover:bg-white/10 transition-colors">
+                  <button onClick={(e) => { e.stopPropagation(); markRead(n.id as string) }} className="shrink-0 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70 hover:text-white hover:bg-white/10 transition-colors">
                     Read
                   </button>
                 )}

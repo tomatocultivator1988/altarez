@@ -45,7 +45,7 @@ export function MobileNav({ role }: MobileNavProps) {
             href={tab.href}
             className={cn(
               "flex flex-col items-center gap-0.5 py-2 px-3 min-w-0 text-[10px] transition-colors",
-              isActive ? "text-primary" : "text-white/40 hover:text-white/70"
+              isActive ? "text-primary" : "text-white/60 hover:text-white/90"
             )}
           >
             <tab.icon className={cn("size-5", isActive && "text-primary")} />

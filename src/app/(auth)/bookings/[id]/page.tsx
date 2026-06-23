@@ -63,7 +63,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <Link href="/bookings" className="inline-flex items-center gap-1 text-sm text-white/50 hover:text-white"><ArrowLeft className="size-4" /> Back</Link>
+      <Link href="/bookings" className="inline-flex items-center gap-1 text-sm text-white/70 hover:text-white"><ArrowLeft className="size-4" /> Back</Link>
 
       <DocumentationTimeline bookingId={id} />
 
