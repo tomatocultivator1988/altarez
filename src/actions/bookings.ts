@@ -216,7 +216,7 @@ export async function documentPickup(bookingId: string, formData: FormData) {
   const uploadRows: { url: string; type: string; name: string }[] = []
 
   try {
-    const eqUrl = await uploadFile(equipmentFile, { userId: user.id, folder: "booking-pickup", access: "private" })
+    const eqUrl = await uploadFile(equipmentFile, { userId: user.id, folder: "booking-pickup", access: "public" })
     uploadRows.push({ url: eqUrl, type: "pickup_equipment", name: equipmentFile.name })
   } catch (e: any) {
     return { error: e?.message || "Failed to upload equipment photo" }
@@ -224,7 +224,7 @@ export async function documentPickup(bookingId: string, formData: FormData) {
 
   if (hourMeterFile && hourMeterFile instanceof File && hourMeterFile.size > 0) {
     try {
-      const hmUrl = await uploadFile(hourMeterFile, { userId: user.id, folder: "booking-pickup", access: "private" })
+      const hmUrl = await uploadFile(hourMeterFile, { userId: user.id, folder: "booking-pickup", access: "public" })
       uploadRows.push({ url: hmUrl, type: "pickup_hour_meter", name: hourMeterFile.name })
     } catch (e: any) {
       return { error: e?.message || "Failed to upload hour meter photo" }
@@ -232,7 +232,7 @@ export async function documentPickup(bookingId: string, formData: FormData) {
   }
 
   try {
-    const sfUrl = await uploadFile(selfieFile, { userId: user.id, folder: "booking-pickup", access: "private" })
+    const sfUrl = await uploadFile(selfieFile, { userId: user.id, folder: "booking-pickup", access: "public" })
     uploadRows.push({ url: sfUrl, type: "pickup_selfie", name: selfieFile.name })
   } catch (e: any) {
     return { error: e?.message || "Failed to upload selfie" }
@@ -311,7 +311,7 @@ export async function documentReturn(bookingId: string, formData: FormData) {
   const uploadRows: { url: string; type: string; name: string }[] = []
 
   try {
-    const eqUrl = await uploadFile(equipmentFile, { userId: user.id, folder: "booking-return", access: "private" })
+    const eqUrl = await uploadFile(equipmentFile, { userId: user.id, folder: "booking-return", access: "public" })
     uploadRows.push({ url: eqUrl, type: "return_equipment", name: equipmentFile.name })
   } catch (e: any) {
     return { error: e?.message || "Failed to upload equipment photo" }
@@ -319,7 +319,7 @@ export async function documentReturn(bookingId: string, formData: FormData) {
 
   if (hourMeterFile && hourMeterFile instanceof File && hourMeterFile.size > 0) {
     try {
-      const hmUrl = await uploadFile(hourMeterFile, { userId: user.id, folder: "booking-return", access: "private" })
+      const hmUrl = await uploadFile(hourMeterFile, { userId: user.id, folder: "booking-return", access: "public" })
       uploadRows.push({ url: hmUrl, type: "return_hour_meter", name: hourMeterFile.name })
     } catch (e: any) {
       return { error: e?.message || "Failed to upload hour meter photo" }
@@ -331,7 +331,7 @@ export async function documentReturn(bookingId: string, formData: FormData) {
   )
   for (const df of damageFiles) {
     try {
-      const dUrl = await uploadFile(df, { userId: user.id, folder: "booking-return", access: "private" })
+      const dUrl = await uploadFile(df, { userId: user.id, folder: "booking-return", access: "public" })
       uploadRows.push({ url: dUrl, type: "return_damage", name: df.name })
     } catch (e: any) {
       return { error: e?.message || "Failed to upload damage photo" }

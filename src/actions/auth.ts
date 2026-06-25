@@ -103,7 +103,7 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   const idFile = formData.get("id_document") as File | null
   if (idFile && idFile instanceof File && idFile.size > 0) {
     try {
-      const idUrl = await uploadFile(idFile, { userId: data.user.id, folder: "id-documents", access: "private" })
+      const idUrl = await uploadFile(idFile, { userId: data.user.id, folder: "id-documents", access: "public" })
       await supabase.from("uploads").insert({
         user_id: data.user.id,
         file_name: idFile.name,
