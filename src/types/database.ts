@@ -80,6 +80,8 @@ export type ReportStatus = 'pending' | 'reviewed' | 'resolved'
 export type DisputeStatus = 'open' | 'resolved_lender' | 'resolved_renter' | 'admin_resolved'
 export type PaymentMethod = 'cash' | 'bank_transfer' | 'gcash' | 'maya'
 
+export type IdType = 'national_id' | 'driver_license' | 'passport' | 'umid' | 'voter_id' | 'prc_id' | 'postal_id' | 'senior_citizen_id' | 'pwd_id' | 'barangay_id' | 'company_id' | 'other'
+
 export interface Profile {
   id: string
   role: UserRole
@@ -95,6 +97,8 @@ export interface Profile {
   is_banned: boolean
   banned_at: string | null
   banned_reason: string | null
+  id_type: IdType | null
+  id_number: string | null
   created_at: string
   updated_at: string
 }

@@ -60,6 +60,21 @@ export const DISPUTE_STATUSES = {
   admin_resolved:    { label: 'Resolved — Admin',    color: 'bg-blue-100 text-blue-800'   },
 } as const
 
+export const ID_TYPES = [
+  { value: 'national_id', label: 'National ID (PhilSys)' },
+  { value: 'driver_license', label: "Driver's License" },
+  { value: 'passport', label: 'Passport' },
+  { value: 'umid', label: 'UMID (SSS/GSIS)' },
+  { value: 'voter_id', label: "Voter's ID" },
+  { value: 'prc_id', label: 'PRC ID' },
+  { value: 'postal_id', label: 'Postal ID' },
+  { value: 'senior_citizen_id', label: 'Senior Citizen ID' },
+  { value: 'pwd_id', label: 'PWD ID' },
+  { value: 'barangay_id', label: 'Barangay ID' },
+  { value: 'company_id', label: 'Company ID' },
+  { value: 'other', label: 'Other' },
+] as const
+
 export const ANOMALY_THRESHOLD = 50
 
 export const ITEMS_PER_PAGE = 12

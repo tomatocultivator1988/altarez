@@ -60,6 +60,31 @@ export function ProfileEditForm({ profile }: { profile: Record<string, unknown> 
         <input name="address" className={inputClass} defaultValue={(profile.address as string) ?? ""} />
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label className="mb-1 block text-xs text-white/50">ID Type</label>
+          <select name="idType" className={inputClass} defaultValue={(profile.id_type as string) ?? ""}>
+            <option value="">Select ID Type</option>
+            <option value="national_id">National ID (PhilSys)</option>
+            <option value="driver_license">Driver's License</option>
+            <option value="passport">Passport</option>
+            <option value="umid">UMID (SSS/GSIS)</option>
+            <option value="voter_id">Voter's ID</option>
+            <option value="prc_id">PRC ID</option>
+            <option value="postal_id">Postal ID</option>
+            <option value="senior_citizen_id">Senior Citizen ID</option>
+            <option value="pwd_id">PWD ID</option>
+            <option value="barangay_id">Barangay ID</option>
+            <option value="company_id">Company ID</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-white/50">ID Number</label>
+          <input name="idNumber" className={inputClass} defaultValue={(profile.id_number as string) ?? ""} />
+        </div>
+      </div>
+
       <div className="flex gap-3 pt-2">
         <Link href="/profile" className={cn(buttonVariants({ variant: "outline" }), "flex-1")}>Cancel</Link>
         <button type="submit" disabled={loading} className={cn(buttonVariants(), "flex-1 bg-emerald-600 hover:bg-emerald-700")}>

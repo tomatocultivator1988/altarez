@@ -73,6 +73,8 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   const isFcaMember = formData.get("isFcaMember") === "on"
   const barangay = formData.get("barangay") as string | null
   const address = formData.get("address") as string | null
+  const idType = formData.get("idType") as string | null
+  const idNumber = formData.get("idNumber") as string | null
 
   const { error: profileErr } = await supabase.from("profiles").upsert({
     id: data.user.id,
@@ -84,6 +86,8 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
     is_fca_member: isFcaMember,
     barangay: barangay || null,
     address: address || null,
+    id_type: idType || null,
+    id_number: idNumber || null,
   })
 
   if (profileErr) return { error: "Failed to create profile: " + profileErr.message }
@@ -130,6 +134,8 @@ export async function updateProfile(formData: FormData) {
   const phoneNumber = (formData.get("phone_number") as string) || null
   const barangay = (formData.get("barangay") as string) || null
   const address = (formData.get("address") as string) || null
+  const idType = (formData.get("idType") as string) || null
+  const idNumber = (formData.get("idNumber") as string) || null
 
   if (!firstName?.trim() || !lastName?.trim() || !username?.trim()) {
     return { error: "Name, username are required" }
@@ -142,6 +148,8 @@ export async function updateProfile(formData: FormData) {
     phone_number: phoneNumber?.trim() || null,
     barangay: barangay?.trim() || null,
     address: address?.trim() || null,
+    id_type: idType || null,
+    id_number: idNumber || null,
   }).eq("id", user.id)
 
   if (error) return { error: error.message }

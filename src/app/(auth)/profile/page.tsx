@@ -39,6 +39,8 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
               {profile.address && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Address</span><span>{profile.address}</span></div>}
               {profile.is_fca_member && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">FCA Member</span><span className="text-emerald-400">Yes</span></div>}
               {lenderProfile && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">Hectares</span><span>{lenderProfile.hectares} ha</span></div>}
+              {profile.id_type && profile.id_number && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">ID Type</span><span className="capitalize">{profile.id_type.replace(/_/g, ' ')}</span></div>}
+              {profile.id_number && <div className="flex flex-col sm:flex-row sm:justify-between"><span className="text-white/50 sm:min-w-[80px]">ID Number</span><span>{profile.id_number}</span></div>}
             </div>
           </div>
         </>

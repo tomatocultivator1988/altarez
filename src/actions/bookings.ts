@@ -383,7 +383,7 @@ export async function documentReturn(bookingId: string, formData: FormData) {
   if (anomalyNote) updateData.anomaly_note = anomalyNote
 
   const { error, count: affectedRows } = await db.from("bookings").update(updateData)
-    .eq("id", bookingId).eq("status", "approved")
+    .eq("id", bookingId).eq("status", booking.status)
   if (error) return { error: error.message }
   if (affectedRows === 0) return { error: "Booking status has changed. Please refresh." }
 

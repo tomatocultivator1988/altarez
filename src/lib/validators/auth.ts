@@ -19,6 +19,8 @@ export const registerSchema = z.object({
   address: z.string().optional(),
   hectares: z.number().min(0).optional(),
   farmLocation: z.string().optional(),
+  idType: z.string().optional(),
+  idNumber: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],

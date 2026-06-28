@@ -228,11 +228,14 @@ export default function LandingClient() {
                     >
                       {loginPending ? "Logging in..." : "Log In"}
                     </button>
-                    <p className="text-center text-xs text-white/40">
+                    <div className="flex items-center justify-between text-xs">
                       <button type="button" onClick={() => setActiveModal("register")} className="text-primary/80 hover:text-primary">
                         Don&apos;t have an account?
                       </button>
-                    </p>
+                      <button type="button" onClick={() => alert("Password reset coming soon. Contact admin for assistance.")} className="text-white/40 hover:text-white/70">
+                        Forgot password?
+                      </button>
+                    </div>
                   </form>
                 )}
 
@@ -278,10 +281,34 @@ export default function LandingClient() {
                         <option value="lender">Lender</option>
                       </select>
                     </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label htmlFor="reg-id-type" className="mb-1 block text-xs font-medium text-white/70">ID Type</label>
+                        <select id="reg-id-type" name="idType" className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white backdrop-blur-sm focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                          <option value="">Select ID Type</option>
+                          <option value="national_id">National ID (PhilSys)</option>
+                          <option value="driver_license">Driver's License</option>
+                          <option value="passport">Passport</option>
+                          <option value="umid">UMID (SSS/GSIS)</option>
+                          <option value="voter_id">Voter's ID</option>
+                          <option value="prc_id">PRC ID</option>
+                          <option value="postal_id">Postal ID</option>
+                          <option value="senior_citizen_id">Senior Citizen ID</option>
+                          <option value="pwd_id">PWD ID</option>
+                          <option value="barangay_id">Barangay ID</option>
+                          <option value="company_id">Company ID</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="reg-id-number" className="mb-1 block text-xs font-medium text-white/70">ID Number</label>
+                        <input id="reg-id-number" name="idNumber" className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 backdrop-blur-sm focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                      </div>
+                    </div>
                     <div>
-                      <label htmlFor="reg-id-doc" className="mb-1 block text-xs font-medium text-white/70">ID Document (optional)</label>
+                      <label htmlFor="reg-id-doc" className="mb-1 block text-xs font-medium text-white/70">Upload ID Document (optional)</label>
                       <input id="reg-id-doc" name="id_document" type="file" accept="image/*,.pdf" className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/60 file:mr-2 sm:file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-2 sm:file:px-3 file:py-1 file:text-xs sm:file:text-sm file:text-white hover:file:bg-white/20 backdrop-blur-sm focus:outline-none truncate" />
-                      <p className="mt-1 text-xs text-white/30">Upload a valid ID (PhilSys, UMID, Driver's License) for identity verification</p>
+                      <p className="mt-1 text-xs text-white/30">Upload a valid ID for identity verification</p>
                     </div>
                     <button type="submit" disabled={regPending} className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 disabled:opacity-50">
                       {regPending ? "Creating Account..." : "Create Account"}
