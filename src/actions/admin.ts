@@ -37,7 +37,11 @@ export async function adminDeleteUser(userId: string) {
 
   if (userId === user.id) return { error: "Cannot delete yourself" }
 
-  const { error } = await admin.auth.admin.deleteUser(userId)
+  const { error } = await admin.from("profiles").update({
+    is_banned: true,
+    banned_at: new Date().toISOString(),
+    banned_reason: "Deleted by admin",
+  }).eq("id", userId)
   if (error) return { error: error.message }
 
   revalidatePath("/admin/users")

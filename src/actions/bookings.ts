@@ -86,7 +86,8 @@ export async function createBooking(machinery_id: string, formData: FormData) {
 
   if (error) return { error: error.message }
 
-  await supabase.from("notifications").insert({
+  const notifyAdmin = createAdminClient()
+  await notifyAdmin.from("notifications").insert({
     user_id: machinery.owner_id,
     title: "New Booking Request",
     message: `${user.email} requested your ${machinery.machine_name} (${starting_date} → ${ending_date}).`,
@@ -166,7 +167,8 @@ export async function updateBookingStatus(bookingId: string, status: string) {
   const machineName = (booking.machinery as { machine_name: string }).machine_name
   const prefix = isAdmin ? "Admin " : ""
 
-  await db.from("notifications").insert([
+  const notifyAdmin = createAdminClient()
+  await notifyAdmin.from("notifications").insert([
     { user_id: booking.owner_id, title: `Booking ${label}`, message: `${prefix}Booking for ${machineName} has been ${label}.`, type: status === "denied" ? "error" : "info", link: "/bookings" },
     { user_id: booking.renter_id, title: `Booking ${label}`, message: `${prefix}Your booking for ${machineName} has been ${label}.`, type: status === "denied" ? "error" : status === "completed" ? "success" : "info", link: "/bookings" },
   ])
@@ -200,8 +202,9 @@ export async function documentPickup(bookingId: string, formData: FormData) {
   if (booking.status !== "approved") return { error: "Booking must be approved before documenting pickup" }
 
   const hourMeterStr = formData.get("hour_meter_start") as string | null
-  const hourMeterStart = hourMeterStr ? Number(hourMeterStr) : null
-  if (hourMeterStart !== null && !Number.isFinite(hourMeterStart))
+  if (!hourMeterStr) return { error: "Hour meter reading is required for anomaly detection" }
+  const hourMeterStart = Number(hourMeterStr)
+  if (!Number.isFinite(hourMeterStart))
     return { error: "Invalid hour meter reading" }
 
   const equipmentFile = formData.get("photo_equipment") as File | null
@@ -263,7 +266,8 @@ export async function documentPickup(bookingId: string, formData: FormData) {
   await db.from("machinery").update({ status: "in_use" }).eq("id", booking.machinery_id)
 
   const machineName = (booking.machinery as { machine_name: string }).machine_name
-  await db.from("notifications").insert([
+  const notifyAdmin = createAdminClient()
+  await notifyAdmin.from("notifications").insert([
     { user_id: booking.owner_id, title: "Pickup Documented", message: `Pickup for ${machineName} has been documented. Booking is now Active.`, type: "info", link: "/bookings" },
     { user_id: booking.renter_id, title: "Rental Active", message: `Your rental of ${machineName} is now Active.`, type: "info", link: "/bookings" },
   ])
@@ -397,7 +401,8 @@ export async function documentReturn(bookingId: string, formData: FormData) {
   }
 
   const machineName = (machinery as { machine_name: string })?.machine_name ?? "Equipment"
-  await db.from("notifications").insert([
+  const notifyAdmin = createAdminClient()
+  await notifyAdmin.from("notifications").insert([
     { user_id: booking.owner_id, title: "Return Documented", message: `Return for ${machineName} has been documented.${anomalyFlagged ? " Usage anomaly detected." : ""}`, type: anomalyFlagged ? "warning" : "info", link: "/bookings" },
     { user_id: booking.renter_id, title: "Rental Complete", message: `Your rental of ${machineName} has been completed.`, type: "success", link: "/bookings" },
   ])
@@ -476,9 +481,11 @@ export async function openDispute(bookingId: string, reason: string) {
   }).select("id").single()
   if (error) return { error: error.message }
 
-  await admin.from("notifications").insert({
-    user_id: booking.renter_id, title: "Dispute Opened", message: `A dispute has been opened for one of your bookings.`, type: "warning", link: "/bookings",
-  })
+  const otherPartyId = booking.renter_id === user.id ? booking.owner_id : booking.renter_id
+  await admin.from("notifications").insert([
+    { user_id: user.id, title: "Dispute Opened", message: "Your dispute has been submitted.", type: "info", link: "/bookings" },
+    { user_id: otherPartyId, title: "Dispute Opened", message: `A dispute has been opened for one of your bookings.`, type: "warning", link: "/bookings" },
+  ])
 
   revalidatePath("/bookings/[id]", "page")
   revalidatePath("/admin/bookings")

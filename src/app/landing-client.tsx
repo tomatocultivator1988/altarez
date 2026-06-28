@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useActionState, useCallback } from "react"
+import { useState, useActionState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
 import { login, register } from "@/actions/auth"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -15,6 +16,15 @@ const registerInitial = { error: "", success: "" }
 
 export default function LandingClient() {
   const router = useRouter()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) router.replace("/dashboard")
+    }
+    checkAuth()
+  }, [router])
   const [activeModal, setActiveModal] = useState<ModalType>(null)
   const [navOpen, setNavOpen] = useState(false)
 

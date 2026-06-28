@@ -24,12 +24,17 @@ export async function login(_prevState: AuthState, formData: FormData): Promise<
   const admin = createAdminClient()
   const { data: profile, error: profileError } = await admin
     .from("profiles")
-    .select("role")
+    .select("role, is_banned")
     .eq("id", data.user.id)
     .single()
 
   if (profileError || !profile) {
     return { error: `Profile lookup failed: ${profileError?.message ?? "not found"}` }
+  }
+
+  if (profile.is_banned) {
+    await supabase.auth.signOut()
+    return { error: "Your account has been banned. Contact an administrator." }
   }
 
   revalidatePath("/", "layout")
@@ -47,6 +52,9 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   const lastName = formData.get("lastName") as string
   const username = formData.get("username") as string
 
+  const hectaresStr = formData.get("hectares") as string | null
+  const farmLocation = formData.get("farmLocation") as string | null
+
   const parsed = registerSchema.safeParse({
     email,
     password,
@@ -55,6 +63,10 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
     firstName,
     lastName,
     username,
+    hectares: hectaresStr ? Number(hectaresStr) : undefined,
+    farmLocation: farmLocation || undefined,
+    idType: formData.get("idType") as string | undefined,
+    idNumber: formData.get("idNumber") as string | undefined,
   })
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
@@ -69,6 +81,7 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   if (error) return { error: error.message }
   if (!data.user) return { error: "Registration failed" }
 
+  const admin = createAdminClient()
   const phoneNumber = formData.get("phoneNumber") as string | null
   const isFcaMember = formData.get("isFcaMember") === "on"
   const barangay = formData.get("barangay") as string | null
@@ -76,7 +89,7 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   const idType = formData.get("idType") as string | null
   const idNumber = formData.get("idNumber") as string | null
 
-  const { error: profileErr } = await supabase.from("profiles").upsert({
+  const { error: profileErr } = await admin.from("profiles").upsert({
     id: data.user.id,
     role,
     first_name: firstName,
@@ -93,11 +106,10 @@ export async function register(_prevState: AuthState, formData: FormData): Promi
   if (profileErr) return { error: "Failed to create profile: " + profileErr.message }
 
   if (role === "lender") {
-    const hectaresStr = formData.get("hectares") as string
-    const hectares = hectaresStr ? Number(hectaresStr) : null
-    const farmLocation = formData.get("farmLocation") as string | null
+    const hectares = parsed.data.hectares ?? null
+    const farmLocation = parsed.data.farmLocation ?? null
 
-    await supabase.from("lender_profiles").upsert({
+    await admin.from("lender_profiles").upsert({
       id: data.user.id,
       hectares: hectares ?? 0,
       farm_location: farmLocation || null,
